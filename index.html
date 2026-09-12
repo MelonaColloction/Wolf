@@ -4,51 +4,202 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Wolf 🐺</title>
-<link rel="stylesheet" href="style.css">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; }
+:root {
+  --card: #15151f; --card2: #1c1c2a; --border: #2a2a3d;
+  --text: #e8e8f0; --muted: #8888a0;
+  --accent: #7c5cff; --accent2: #b48cff;
+  --gold: #ffb84d; --green: #4ade80; --red: #ef4444;
+}
+body {
+  background: radial-gradient(circle at top, #1a1a2e 0%, #0a0a0f 70%);
+  color: var(--text); min-height: 100vh; overflow-x: hidden;
+}
+#splash {
+  position: fixed; inset: 0;
+  background: radial-gradient(circle at center, #1a1a2e 0%, #050508 80%);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  z-index: 9999; transition: opacity 0.8s ease, visibility 0.8s;
+}
+#splash.hide { opacity: 0; visibility: hidden; }
+.splash-wolf { width: 240px; height: 240px; filter: drop-shadow(0 0 30px rgba(124, 92, 255, 0.7)); animation: wolfPulse 2s ease-in-out infinite; }
+.splash-wolf svg { width: 100%; height: 100%; display: block; }
+@keyframes wolfPulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+#splash h1 {
+  margin-top: 20px; font-size: 42px; letter-spacing: 8px;
+  background: linear-gradient(90deg, #7c5cff, #b48cff, #7c5cff);
+  background-size: 200% auto;
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  animation: shine 3s linear infinite;
+}
+@keyframes shine { to { background-position: 200% center; } }
+#splash .loader { margin-top: 30px; width: 160px; height: 4px; background: #1c1c2a; border-radius: 10px; overflow: hidden; }
+#splash .loader::after { content: ''; display: block; height: 100%; width: 0; background: linear-gradient(90deg, #7c5cff, #b48cff); animation: load 2.3s ease forwards; }
+@keyframes load { to { width: 100%; } }
+header { padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); background: rgba(15,15,25,0.8); backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 100; }
+header .logo { display: flex; align-items: center; gap: 10px; font-size: 22px; font-weight: bold; letter-spacing: 3px; background: linear-gradient(90deg, #7c5cff, #b48cff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+header .logo .logo-icon { width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; filter: drop-shadow(0 0 8px rgba(124,92,255,0.5)); }
+header .logo .logo-icon svg { width: 100%; height: 100%; display: block; }
+header .user { display: flex; align-items: center; gap: 8px; background: var(--card); padding: 8px 14px; border-radius: 30px; border: 1px solid var(--border); font-size: 14px; }
+header .user .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); box-shadow: 0 0 10px var(--green); }
+.wallets { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 20px; max-width: 600px; margin: 0 auto; }
+.wallet { background: linear-gradient(145deg, var(--card), var(--card2)); border: 1px solid var(--border); border-radius: 18px; padding: 18px; position: relative; overflow: hidden; }
+.wallet::before { content: ''; position: absolute; top: -50%; right: -50%; width: 100%; height: 100%; background: radial-gradient(circle, rgba(124,92,255,0.15), transparent 70%); }
+.wallet .label { font-size: 13px; color: var(--muted); margin-bottom: 6px; position: relative; }
+.wallet .value { font-size: 26px; font-weight: bold; position: relative; }
+.wallet.points .value { color: var(--gold); }
+.wallet.tokens .value { color: var(--accent2); }
+.wallet .icon { position: absolute; top: 14px; right: 14px; font-size: 22px; opacity: 0.4; }
+.section { max-width: 600px; margin: 0 auto 24px; padding: 0 20px; }
+.section h2 { font-size: 18px; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+.section h2 .badge { background: var(--accent); color: white; font-size: 11px; padding: 3px 9px; border-radius: 20px; font-weight: normal; }
+.wheel-wrap { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 24px; display: flex; flex-direction: column; align-items: center; }
+.wheel-container { position: relative; width: 300px; height: 300px; }
+#wheel { width: 100%; height: 100%; border-radius: 50%; transition: transform 4.5s cubic-bezier(0.17, 0.67, 0.16, 1); box-shadow: 0 0 40px rgba(124,92,255,0.4), inset 0 0 0 6px #1c1c2a, inset 0 0 0 8px var(--accent); }
+.pointer { position: absolute; top: -14px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 16px solid transparent; border-right: 16px solid transparent; border-top: 26px solid var(--gold); filter: drop-shadow(0 0 8px var(--gold)); z-index: 10; }
+.wheel-center { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 80px; height: 80px; border-radius: 50%; background: radial-gradient(circle, #2a2a3d, #15151f); border: 3px solid var(--accent); display: flex; align-items: center; justify-content: center; padding: 8px; z-index: 5; box-shadow: 0 0 20px rgba(124,92,255,0.6); }
+.wheel-center svg { width: 100%; height: 100%; display: block; }
+.spin-btn { margin-top: 22px; padding: 14px 40px; font-size: 17px; font-weight: bold; color: white; background: linear-gradient(90deg, #7c5cff, #b48cff); border: none; border-radius: 30px; cursor: pointer; transition: all 0.2s; box-shadow: 0 6px 20px rgba(124,92,255,0.5); }
+.spin-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 8px 26px rgba(124,92,255,0.7); }
+.spin-btn:disabled { opacity: 0.5; cursor: not-allowed; box-shadow: none; }
+.spins-info { margin-top: 12px; font-size: 13px; color: var(--muted); }
+.spins-info b { color: var(--accent2); }
+.modal-btn { width: 100%; padding: 18px 20px; background: linear-gradient(145deg, var(--card), var(--card2)); border: 1px solid var(--border); border-radius: 18px; color: var(--text); font-size: 16px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: space-between; transition: all 0.2s; }
+.modal-btn:hover { border-color: var(--accent); transform: translateY(-2px); }
+.modal-btn .left { display: flex; align-items: center; gap: 12px; }
+.modal-btn .icon { font-size: 24px; }
+.modal-btn .badge { background: var(--accent); color: white; font-size: 12px; padding: 3px 10px; border-radius: 20px; }
+.modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.75); backdrop-filter: blur(6px); display: flex; align-items: center; justify-content: center; z-index: 1000; opacity: 0; visibility: hidden; transition: all 0.3s; padding: 20px; }
+.modal-bg.show { opacity: 1; visibility: visible; }
+.modal { background: linear-gradient(145deg, var(--card), var(--card2)); border: 1px solid var(--accent); border-radius: 22px; padding: 24px 22px; max-width: 420px; width: 100%; max-height: 85vh; overflow-y: auto; transform: scale(0.9); transition: transform 0.3s; box-shadow: 0 0 50px rgba(124,92,255,0.5); position: relative; }
+.modal-bg.show .modal { transform: scale(1); }
+.modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; }
+.modal-header h3 { font-size: 18px; }
+.modal-close { background: rgba(255,255,255,0.05); border: none; color: var(--muted); width: 34px; height: 34px; border-radius: 50%; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
+.modal-close:hover { background: rgba(255,255,255,0.1); color: white; }
+.daily-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 14px; }
+.day { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 12px 6px; text-align: center; font-size: 12px; transition: all 0.3s; position: relative; }
+.day .num { font-size: 11px; color: var(--muted); margin-bottom: 4px; }
+.day .rew { font-size: 13px; font-weight: bold; }
+.day.claimed { background: linear-gradient(145deg, #1f3a2a, #15251c); border-color: var(--green); }
+.day.claimed .rew { color: var(--green); }
+.day.claimed::after { content: '✓'; position: absolute; top: 4px; right: 6px; color: var(--green); font-size: 12px; }
+.day.today { border-color: var(--accent); box-shadow: 0 0 14px rgba(124,92,255,0.4); }
+.day.bonus { grid-column: span 4; background: linear-gradient(145deg, #2a1f3a, #1a1525); }
+.day.bonus .rew { color: var(--accent2); }
+.check-btn { width: 100%; padding: 14px; font-size: 16px; font-weight: bold; color: white; background: linear-gradient(90deg, #4ade80, #22c55e); border: none; border-radius: 14px; cursor: pointer; transition: all 0.2s; }
+.check-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(74,222,128,0.5); }
+.check-btn:disabled { opacity: 0.5; cursor: not-allowed; background: #2a2a3d; }
+.ref-card { background: transparent; }
+.ref-card p { font-size: 14px; color: var(--muted); margin-bottom: 18px; line-height: 1.7; }
+.ref-options { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.ref-opt { background: var(--card2); border: 2px solid var(--border); border-radius: 16px; padding: 18px 12px; text-align: center; cursor: pointer; transition: all 0.2s; }
+.ref-opt:hover { border-color: var(--accent); transform: translateY(-2px); }
+.ref-opt .big { font-size: 24px; font-weight: bold; margin-bottom: 4px; }
+.ref-opt.p .big { color: var(--gold); }
+.ref-opt.t .big { color: var(--accent2); }
+.ref-opt .small { font-size: 12px; color: var(--muted); }
+.ref-locked { text-align: center; padding: 10px 0; }
+.ref-locked .big { font-size: 40px; margin-bottom: 10px; }
+.ref-locked .info { font-size: 15px; margin-bottom: 6px; }
+.ref-locked .info b { color: var(--accent2); }
+.ref-link-box { background: rgba(255,255,255,0.03); border: 1px solid var(--border); padding: 12px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; gap: 10px; margin: 14px 0; }
+.ref-link-box span { color: var(--muted); font-size: 12px; word-break: break-all; flex: 1; text-align: left; }
+.ref-link-box button { background: var(--accent); border: none; color: white; padding: 8px 14px; border-radius: 10px; font-size: 12px; font-weight: bold; cursor: pointer; transition: 0.2s; white-space: nowrap; }
+.ref-link-box button:hover { background: var(--accent2); }
+.ref-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+.ref-stat { background: var(--card2); border: 1px solid var(--border); border-radius: 12px; padding: 12px; text-align: center; }
+.ref-stat .num { font-size: 22px; font-weight: bold; color: var(--accent2); }
+.ref-stat .lbl { font-size: 11px; color: var(--muted); margin-top: 4px; }
+.ref-list { max-height: 200px; overflow-y: auto; margin-top: 10px; }
+.ref-list-item { background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 10px; padding: 10px 14px; margin-bottom: 6px; font-size: 13px; display: flex; justify-content: space-between; align-items: center; }
+.ref-list-item .name { color: var(--text); }
+.ref-list-item .date { color: var(--muted); font-size: 11px; }
+.ref-empty { text-align: center; padding: 20px; color: var(--muted); font-size: 13px; }
+.bonus-info { background: linear-gradient(145deg, #2a1f3a, #1a1525); border: 1px solid var(--accent); border-radius: 14px; padding: 14px; text-align: center; margin-bottom: 16px; font-size: 13px; }
+.bonus-info b { color: var(--gold); }
+.bonus-input-wrap { display: flex; gap: 8px; margin-bottom: 12px; }
+.bonus-input { flex: 1; padding: 14px 16px; background: var(--card2); border: 1px solid var(--border); border-radius: 12px; color: var(--text); font-size: 16px; text-align: center; letter-spacing: 4px; text-transform: uppercase; font-weight: bold; outline: none; transition: 0.2s; min-width: 0; }
+.bonus-input:focus { border-color: var(--accent); }
+.bonus-input::placeholder { letter-spacing: normal; font-weight: normal; color: var(--muted); }
+.bonus-btn { padding: 14px 22px; background: linear-gradient(90deg, #7c5cff, #b48cff); border: none; border-radius: 12px; color: white; font-size: 14px; font-weight: bold; cursor: pointer; transition: 0.2s; white-space: nowrap; }
+.bonus-btn:hover:not(:disabled) { transform: translateY(-2px); }
+.bonus-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.bonus-status { text-align: center; font-size: 13px; padding: 10px; border-radius: 10px; margin-top: 10px; }
+.bonus-status.success { background: rgba(74,222,128,0.1); color: var(--green); border: 1px solid var(--green); }
+.bonus-status.error { background: rgba(239,68,68,0.1); color: var(--red); border: 1px solid var(--red); }
+.result-modal { text-align: center; }
+.result-modal .emoji { font-size: 54px; margin-bottom: 12px; }
+.result-modal h3 { font-size: 20px; margin-bottom: 8px; }
+.result-modal .res { font-size: 26px; font-weight: bold; margin: 14px 0; }
+.result-modal .res.p { color: var(--gold); }
+.result-modal .res.t { color: var(--accent2); }
+.result-modal .res.empty { color: var(--red); }
+.result-modal button { margin-top: 10px; padding: 11px 32px; border-radius: 30px; border: none; background: linear-gradient(90deg, #7c5cff, #b48cff); color: white; font-size: 15px; font-weight: bold; cursor: pointer; }
+.channel-box { background: linear-gradient(145deg, #1a2540, #0f1525); border: 1px solid #2a4080; border-radius: 16px; padding: 18px; text-align: center; margin-bottom: 14px; }
+.channel-box .title { font-size: 15px; font-weight: bold; margin-bottom: 6px; color: #7ab8ff; }
+.channel-box .desc { font-size: 12px; color: var(--muted); margin-bottom: 14px; line-height: 1.6; }
+.channel-box .btn { display: inline-block; padding: 12px 28px; background: linear-gradient(90deg, #2a80ff, #4aa8ff); color: white; text-decoration: none; border-radius: 12px; font-size: 14px; font-weight: bold; transition: 0.2s; border: none; cursor: pointer; width: 100%; }
+.channel-box .btn:hover { transform: translateY(-2px); }
+.channel-box .btn.joined { background: linear-gradient(90deg, #22c55e, #4ade80); cursor: default; }
+.ref-code-btns { display: flex; gap: 8px; margin-top: 10px; }
+.ref-code-btns button { flex: 1; padding: 12px; border: none; border-radius: 12px; font-size: 14px; font-weight: bold; cursor: pointer; transition: 0.2s; color: white; }
+.ref-code-btns .submit { background: linear-gradient(90deg, #7c5cff, #b48cff); }
+.ref-code-btns .skip { background: #2a2a3d; color: var(--muted); }
+.ref-code-btns button:hover { transform: translateY(-2px); }
+.toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(100px); background: var(--card2); border: 1px solid var(--accent); color: var(--text); padding: 14px 24px; border-radius: 30px; font-size: 14px; z-index: 2000; transition: transform 0.4s; box-shadow: 0 10px 30px rgba(0,0,0,0.6); max-width: 90%; text-align: center; }
+.toast.show { transform: translateX(-50%) translateY(0); }
+footer { text-align: center; padding: 30px; color: var(--muted); font-size: 12px; }
+@media (max-width: 420px) {
+  .wheel-container { width: 260px; height: 260px; }
+  .wallet .value { font-size: 22px; }
+  .splash-wolf { width: 200px; height: 200px; }
+}
+</style>
 </head>
 <body>
-
-<!-- ===== Splash ===== -->
+  <!-- ===== Splash ===== -->
 <div id="splash">
   <div class="splash-wolf">
     <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
       <defs>
-        <linearGradient id="furGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+        <linearGradient id="furG" x1="0%" y1="0%" x2="0%" y2="100%">
           <stop offset="0%" stop-color="#c4a5ff"/>
           <stop offset="50%" stop-color="#8b5cf6"/>
           <stop offset="100%" stop-color="#5b21b6"/>
         </linearGradient>
-        <linearGradient id="furDark" x1="0%" y1="0%" x2="0%" y2="100%">
+        <linearGradient id="furD" x1="0%" y1="0%" x2="0%" y2="100%">
           <stop offset="0%" stop-color="#4c1d95"/>
           <stop offset="100%" stop-color="#2e1065"/>
         </linearGradient>
-        <radialGradient id="eyeGlow" cx="50%" cy="50%" r="50%">
+        <radialGradient id="eyeG" cx="50%" cy="50%" r="50%">
           <stop offset="0%" stop-color="#ffffff"/>
           <stop offset="40%" stop-color="#fde68a"/>
           <stop offset="100%" stop-color="#f59e0b"/>
         </radialGradient>
-        <radialGradient id="aura" cx="50%" cy="50%" r="50%">
+        <radialGradient id="auraG" cx="50%" cy="50%" r="50%">
           <stop offset="0%" stop-color="#8b5cf6" stop-opacity="0.35"/>
           <stop offset="70%" stop-color="#7c3aed" stop-opacity="0.1"/>
           <stop offset="100%" stop-color="#7c3aed" stop-opacity="0"/>
         </radialGradient>
-        <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
-          <feGaussianBlur stdDeviation="3" result="blur"/>
-          <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+        <filter id="glowF" x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur stdDeviation="3" result="b"/>
+          <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
         </filter>
-        <filter id="softShadow" x="-30%" y="-30%" width="160%" height="160%">
-          <feGaussianBlur stdDeviation="4" result="blur"/>
-          <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+        <filter id="shadowF" x="-30%" y="-30%" width="160%" height="160%">
+          <feGaussianBlur stdDeviation="4" result="b"/>
+          <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
         </filter>
       </defs>
-      <circle cx="100" cy="105" r="85" fill="url(#aura)"/>
-      <path d="M42 75 L22 15 L68 52 Z" fill="url(#furGrad)" stroke="#2e1065" stroke-width="1.5" stroke-linejoin="round"/>
-      <path d="M48 70 L35 30 L62 55 Z" fill="url(#furDark)"/>
+      <circle cx="100" cy="105" r="85" fill="url(#auraG)"/>
+      <path d="M42 75 L22 15 L68 52 Z" fill="url(#furG)" stroke="#2e1065" stroke-width="1.5" stroke-linejoin="round"/>
+      <path d="M48 70 L35 30 L62 55 Z" fill="url(#furD)"/>
       <path d="M50 68 L42 40 L58 57 Z" fill="#a78bfa" opacity="0.4"/>
-      <path d="M158 75 L178 15 L132 52 Z" fill="url(#furGrad)" stroke="#2e1065" stroke-width="1.5" stroke-linejoin="round"/>
-      <path d="M152 70 L165 30 L138 55 Z" fill="url(#furDark)"/>
+      <path d="M158 75 L178 15 L132 52 Z" fill="url(#furG)" stroke="#2e1065" stroke-width="1.5" stroke-linejoin="round"/>
+      <path d="M152 70 L165 30 L138 55 Z" fill="url(#furD)"/>
       <path d="M150 68 L158 40 L142 57 Z" fill="#a78bfa" opacity="0.4"/>
-      <path d="M38 72 L30 90 Q28 115 42 135 Q60 158 100 162 Q140 158 158 135 Q172 115 170 90 L162 72 L138 58 Q120 50 100 50 Q80 50 62 58 Z" fill="url(#furGrad)" stroke="#2e1065" stroke-width="2" stroke-linejoin="round" filter="url(#softShadow)"/>
+      <path d="M38 72 L30 90 Q28 115 42 135 Q60 158 100 162 Q140 158 158 135 Q172 115 170 90 L162 72 L138 58 Q120 50 100 50 Q80 50 62 58 Z" fill="url(#furG)" stroke="#2e1065" stroke-width="2" stroke-linejoin="round" filter="url(#shadowF)"/>
       <path d="M100 55 Q115 60 122 75 Q110 70 100 72 Z" fill="#c4a5ff" opacity="0.35"/>
       <path d="M100 55 Q85 60 78 75 Q90 70 100 72 Z" fill="#c4a5ff" opacity="0.35"/>
       <path d="M100 52 L100 78" stroke="#2e1065" stroke-width="1.8" opacity="0.5" stroke-linecap="round"/>
@@ -57,11 +208,11 @@
       <path d="M58 82 Q68 76 82 80" stroke="#2e1065" stroke-width="2.5" fill="none" stroke-linecap="round"/>
       <path d="M142 82 Q132 76 118 80" stroke="#2e1065" stroke-width="2.5" fill="none" stroke-linecap="round"/>
       <ellipse cx="72" cy="95" rx="9" ry="7" fill="#0a0a0f"/>
-      <ellipse cx="72" cy="95" rx="6" ry="5" fill="url(#eyeGlow)" filter="url(#glow)"/>
+      <ellipse cx="72" cy="95" rx="6" ry="5" fill="url(#eyeG)" filter="url(#glowF)"/>
       <ellipse cx="72" cy="95" rx="2.2" ry="4" fill="#0a0a0f"/>
       <circle cx="74" cy="92" r="1.5" fill="#ffffff"/>
       <ellipse cx="128" cy="95" rx="9" ry="7" fill="#0a0a0f"/>
-      <ellipse cx="128" cy="95" rx="6" ry="5" fill="url(#eyeGlow)" filter="url(#glow)"/>
+      <ellipse cx="128" cy="95" rx="6" ry="5" fill="url(#eyeG)" filter="url(#glowF)"/>
       <ellipse cx="128" cy="95" rx="2.2" ry="4" fill="#0a0a0f"/>
       <circle cx="130" cy="92" r="1.5" fill="#ffffff"/>
       <path d="M100 118 L90 132 Q100 138 110 132 Z" fill="#0a0a0f" stroke="#2e1065" stroke-width="1"/>
@@ -84,24 +235,24 @@
     <div class="logo-icon">
       <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
         <defs>
-          <linearGradient id="furGradL" x1="0%" y1="0%" x2="0%" y2="100%">
+          <linearGradient id="furL" x1="0%" y1="0%" x2="0%" y2="100%">
             <stop offset="0%" stop-color="#c4a5ff"/>
             <stop offset="50%" stop-color="#8b5cf6"/>
             <stop offset="100%" stop-color="#5b21b6"/>
           </linearGradient>
-          <radialGradient id="eyeGlowL" cx="50%" cy="50%" r="50%">
+          <radialGradient id="eyeL" cx="50%" cy="50%" r="50%">
             <stop offset="0%" stop-color="#ffffff"/>
             <stop offset="40%" stop-color="#fde68a"/>
             <stop offset="100%" stop-color="#f59e0b"/>
           </radialGradient>
         </defs>
-        <path d="M42 75 L22 15 L68 52 Z" fill="url(#furGradL)" stroke="#2e1065" stroke-width="1.5" stroke-linejoin="round"/>
-        <path d="M158 75 L178 15 L132 52 Z" fill="url(#furGradL)" stroke="#2e1065" stroke-width="1.5" stroke-linejoin="round"/>
-        <path d="M38 72 L30 90 Q28 115 42 135 Q60 158 100 162 Q140 158 158 135 Q172 115 170 90 L162 72 L138 58 Q120 50 100 50 Q80 50 62 58 Z" fill="url(#furGradL)" stroke="#2e1065" stroke-width="2" stroke-linejoin="round"/>
+        <path d="M42 75 L22 15 L68 52 Z" fill="url(#furL)" stroke="#2e1065" stroke-width="1.5" stroke-linejoin="round"/>
+        <path d="M158 75 L178 15 L132 52 Z" fill="url(#furL)" stroke="#2e1065" stroke-width="1.5" stroke-linejoin="round"/>
+        <path d="M38 72 L30 90 Q28 115 42 135 Q60 158 100 162 Q140 158 158 135 Q172 115 170 90 L162 72 L138 58 Q120 50 100 50 Q80 50 62 58 Z" fill="url(#furL)" stroke="#2e1065" stroke-width="2" stroke-linejoin="round"/>
         <ellipse cx="72" cy="95" rx="8" ry="6" fill="#0a0a0f"/>
-        <ellipse cx="72" cy="95" rx="5" ry="4" fill="url(#eyeGlowL)"/>
+        <ellipse cx="72" cy="95" rx="5" ry="4" fill="url(#eyeL)"/>
         <ellipse cx="128" cy="95" rx="8" ry="6" fill="#0a0a0f"/>
-        <ellipse cx="128" cy="95" rx="5" ry="4" fill="url(#eyeGlowL)"/>
+        <ellipse cx="128" cy="95" rx="5" ry="4" fill="url(#eyeL)"/>
         <path d="M100 118 L90 132 Q100 138 110 132 Z" fill="#0a0a0f"/>
         <path d="M86 142 Q100 150 114 142" stroke="#0a0a0f" stroke-width="2" fill="none" stroke-linecap="round"/>
       </svg>
@@ -131,13 +282,11 @@
 <!-- ===== Onboarding ===== -->
 <div class="section" id="onboardingSection" style="display:none;">
   <h2>🎯 Get Started</h2>
-
   <div class="channel-box" id="channelBox">
     <div class="title">📢 Channel Membership Required</div>
     <div class="desc">You must join our Telegram channel to use the site</div>
     <button class="btn" id="channelJoinBtn" onclick="joinChannel()">📢 Join Channel</button>
   </div>
-
   <div class="channel-box" id="refCodeBox" style="display:none; background: linear-gradient(145deg, #2a1f3a, #1a1525); border-color: var(--accent);">
     <div class="title" style="color: var(--accent2);">🔗 Referral Code</div>
     <div class="desc">Enter a referral code if you have one, or skip</div>
@@ -151,7 +300,6 @@
 
 <!-- ===== Main Content ===== -->
 <div id="mainContent" style="display:none;">
-
   <div class="section">
     <h2>🎡 Lucky Wheel <span class="badge" id="spinBadge">2 spins</span></h2>
     <div class="wheel-wrap">
@@ -161,24 +309,24 @@
         <div class="wheel-center">
           <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
             <defs>
-              <linearGradient id="furGradW" x1="0%" y1="0%" x2="0%" y2="100%">
+              <linearGradient id="furW" x1="0%" y1="0%" x2="0%" y2="100%">
                 <stop offset="0%" stop-color="#c4a5ff"/>
                 <stop offset="50%" stop-color="#8b5cf6"/>
                 <stop offset="100%" stop-color="#5b21b6"/>
               </linearGradient>
-              <radialGradient id="eyeGlowW" cx="50%" cy="50%" r="50%">
+              <radialGradient id="eyeW" cx="50%" cy="50%" r="50%">
                 <stop offset="0%" stop-color="#ffffff"/>
                 <stop offset="40%" stop-color="#fde68a"/>
                 <stop offset="100%" stop-color="#f59e0b"/>
               </radialGradient>
             </defs>
-            <path d="M42 75 L22 15 L68 52 Z" fill="url(#furGradW)" stroke="#2e1065" stroke-width="1.5" stroke-linejoin="round"/>
-            <path d="M158 75 L178 15 L132 52 Z" fill="url(#furGradW)" stroke="#2e1065" stroke-width="1.5" stroke-linejoin="round"/>
-            <path d="M38 72 L30 90 Q28 115 42 135 Q60 158 100 162 Q140 158 158 135 Q172 115 170 90 L162 72 L138 58 Q120 50 100 50 Q80 50 62 58 Z" fill="url(#furGradW)" stroke="#2e1065" stroke-width="2" stroke-linejoin="round"/>
+            <path d="M42 75 L22 15 L68 52 Z" fill="url(#furW)" stroke="#2e1065" stroke-width="1.5" stroke-linejoin="round"/>
+            <path d="M158 75 L178 15 L132 52 Z" fill="url(#furW)" stroke="#2e1065" stroke-width="1.5" stroke-linejoin="round"/>
+            <path d="M38 72 L30 90 Q28 115 42 135 Q60 158 100 162 Q140 158 158 135 Q172 115 170 90 L162 72 L138 58 Q120 50 100 50 Q80 50 62 58 Z" fill="url(#furW)" stroke="#2e1065" stroke-width="2" stroke-linejoin="round"/>
             <ellipse cx="72" cy="95" rx="8" ry="6" fill="#0a0a0f"/>
-            <ellipse cx="72" cy="95" rx="5" ry="4" fill="url(#eyeGlowW)"/>
+            <ellipse cx="72" cy="95" rx="5" ry="4" fill="url(#eyeW)"/>
             <ellipse cx="128" cy="95" rx="8" ry="6" fill="#0a0a0f"/>
-            <ellipse cx="128" cy="95" rx="5" ry="4" fill="url(#eyeGlowW)"/>
+            <ellipse cx="128" cy="95" rx="5" ry="4" fill="url(#eyeW)"/>
             <path d="M100 118 L90 132 Q100 138 110 132 Z" fill="#0a0a0f"/>
             <path d="M86 142 Q100 150 114 142" stroke="#0a0a0f" stroke-width="2" fill="none" stroke-linecap="round"/>
           </svg>
@@ -191,32 +339,19 @@
 
   <div class="section">
     <h2>📋 Sections</h2>
-
     <button class="modal-btn" onclick="openModal('daily')" style="margin-bottom:10px;">
-      <div class="left">
-        <span class="icon">🎁</span>
-        <span>Daily Check</span>
-      </div>
+      <div class="left"><span class="icon">🎁</span><span>Daily Check</span></div>
       <span class="badge" id="dailyBadge">Day 1</span>
     </button>
-
     <button class="modal-btn" onclick="openModal('referral')" style="margin-bottom:10px;">
-      <div class="left">
-        <span class="icon">👥</span>
-        <span>Referral</span>
-      </div>
+      <div class="left"><span class="icon">👥</span><span>Referral</span></div>
       <span class="badge" id="refBadge">0 users</span>
     </button>
-
     <button class="modal-btn" onclick="openModal('bonus')">
-      <div class="left">
-        <span class="icon">🎟️</span>
-        <span>Bonus</span>
-      </div>
+      <div class="left"><span class="icon">🎟️</span><span>Bonus</span></div>
       <span class="badge">Gift Code</span>
     </button>
   </div>
-
 </div>
 
 <footer>Wolf 🐺 — Made with ❤️</footer>
@@ -224,10 +359,7 @@
 <!-- ===== Daily Check Modal ===== -->
 <div class="modal-bg" id="modal-daily">
   <div class="modal">
-    <div class="modal-header">
-      <h3>🎁 Daily Check</h3>
-      <button class="modal-close" onclick="closeModal('daily')">✕</button>
-    </div>
+    <div class="modal-header"><h3>🎁 Daily Check</h3><button class="modal-close" onclick="closeModal('daily')">✕</button></div>
     <div class="daily-grid" id="dailyGrid"></div>
     <button class="check-btn" id="checkBtn" onclick="dailyCheck()">Claim Today's Reward</button>
   </div>
@@ -236,10 +368,7 @@
 <!-- ===== Referral Modal ===== -->
 <div class="modal-bg" id="modal-referral">
   <div class="modal">
-    <div class="modal-header">
-      <h3>👥 Referral</h3>
-      <button class="modal-close" onclick="closeModal('referral')">✕</button>
-    </div>
+    <div class="modal-header"><h3>👥 Referral</h3><button class="modal-close" onclick="closeModal('referral')">✕</button></div>
     <div class="ref-card" id="refCard"></div>
   </div>
 </div>
@@ -247,13 +376,8 @@
 <!-- ===== Bonus Modal ===== -->
 <div class="modal-bg" id="modal-bonus">
   <div class="modal">
-    <div class="modal-header">
-      <h3>🎟️ Bonus Code</h3>
-      <button class="modal-close" onclick="closeModal('bonus')">✕</button>
-    </div>
-    <div class="bonus-info">
-      🎁 Each code = <b>25 Points</b> + <b>10 Wolf Tokens</b>
-    </div>
+    <div class="modal-header"><h3>🎟️ Bonus Code</h3><button class="modal-close" onclick="closeModal('bonus')">✕</button></div>
+    <div class="bonus-info">🎁 Each code = <b>25 Points</b> + <b>10 Wolf Tokens</b></div>
     <div class="bonus-input-wrap">
       <input type="text" class="bonus-input" id="bonusInput" placeholder="Enter code" maxlength="5" autocomplete="off">
       <button class="bonus-btn" id="bonusBtn" onclick="redeemBonus()">Submit</button>
@@ -275,601 +399,22 @@
 <!-- ===== Toast ===== -->
 <div class="toast" id="toast"></div>
 
+<!-- ===== BONUS CODES (فایل جدا) ===== -->
 <script src="codes.js"></script>
-<script src="app.js"></script>
-</body>
-       </html>
-       * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; }
-:root {
-  --bg: #0a0a0f;
-  --card: #15151f;
-  --card2: #1c1c2a;
-  --border: #2a2a3d;
-  --text: #e8e8f0;
-  --muted: #8888a0;
-  --accent: #7c5cff;
-  --accent2: #b48cff;
-  --gold: #ffb84d;
-  --green: #4ade80;
-  --red: #ef4444;
-}
-body {
-  background: radial-gradient(circle at top, #1a1a2e 0%, #0a0a0f 70%);
-  color: var(--text);
-  min-height: 100vh;
-  overflow-x: hidden;
-}
 
-/* ===== Splash ===== */
-#splash {
-  position: fixed;
-  inset: 0;
-  background: radial-gradient(circle at center, #1a1a2e 0%, #050508 80%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  z-index: 9999;
-  transition: opacity 0.8s ease, visibility 0.8s;
-}
-#splash.hide { opacity: 0; visibility: hidden; }
-.splash-wolf {
-  width: 240px;
-  height: 240px;
-  filter: drop-shadow(0 0 30px rgba(124, 92, 255, 0.7));
-  animation: wolfPulse 2s ease-in-out infinite;
-}
-.splash-wolf svg { width: 100%; height: 100%; display: block; }
-@keyframes wolfPulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.05); }
-}
-#splash h1 {
-  margin-top: 20px;
-  font-size: 42px;
-  letter-spacing: 8px;
-  background: linear-gradient(90deg, #7c5cff, #b48cff, #7c5cff);
-  background-size: 200% auto;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: shine 3s linear infinite;
-}
-@keyframes shine { to { background-position: 200% center; } }
-#splash .loader {
-  margin-top: 30px;
-  width: 160px;
-  height: 4px;
-  background: #1c1c2a;
-  border-radius: 10px;
-  overflow: hidden;
-}
-#splash .loader::after {
-  content: '';
-  display: block;
-  height: 100%;
-  width: 0;
-  background: linear-gradient(90deg, #7c5cff, #b48cff);
-  animation: load 2.3s ease forwards;
-}
-@keyframes load { to { width: 100%; } }
-
-/* ===== Header ===== */
-header {
-  padding: 16px 20px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border-bottom: 1px solid var(--border);
-  background: rgba(15,15,25,0.8);
-  backdrop-filter: blur(10px);
-  position: sticky;
-  top: 0;
-  z-index: 100;
-}
-header .logo {
-  display: flex; align-items: center; gap: 10px;
-  font-size: 22px; font-weight: bold; letter-spacing: 3px;
-  background: linear-gradient(90deg, #7c5cff, #b48cff);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-header .logo .logo-icon {
-  width: 36px; height: 36px;
-  display: flex; align-items: center; justify-content: center;
-  filter: drop-shadow(0 0 8px rgba(124,92,255,0.5));
-}
-header .logo .logo-icon svg { width: 100%; height: 100%; display: block; }
-header .user {
-  display: flex; align-items: center; gap: 8px;
-  background: var(--card);
-  padding: 8px 14px;
-  border-radius: 30px;
-  border: 1px solid var(--border);
-  font-size: 14px;
-}
-header .user .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); box-shadow: 0 0 10px var(--green); }
-
-/* ===== Wallets ===== */
-.wallets {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  padding: 20px;
-  max-width: 600px;
-  margin: 0 auto;
-}
-.wallet {
-  background: linear-gradient(145deg, var(--card), var(--card2));
-  border: 1px solid var(--border);
-  border-radius: 18px;
-  padding: 18px;
-  position: relative;
-  overflow: hidden;
-}
-.wallet::before {
-  content: '';
-  position: absolute;
-  top: -50%; right: -50%;
-  width: 100%; height: 100%;
-  background: radial-gradient(circle, rgba(124,92,255,0.15), transparent 70%);
-}
-.wallet .label { font-size: 13px; color: var(--muted); margin-bottom: 6px; position: relative; }
-.wallet .value { font-size: 26px; font-weight: bold; position: relative; }
-.wallet.points .value { color: var(--gold); }
-.wallet.tokens .value { color: var(--accent2); }
-.wallet .icon { position: absolute; top: 14px; right: 14px; font-size: 22px; opacity: 0.4; }
-
-/* ===== Sections ===== */
-.section {
-  max-width: 600px;
-  margin: 0 auto 24px;
-  padding: 0 20px;
-}
-.section h2 {
-  font-size: 18px;
-  margin-bottom: 14px;
-  display: flex; align-items: center; gap: 8px;
-}
-.section h2 .badge {
-  background: var(--accent);
-  color: white;
-  font-size: 11px;
-  padding: 3px 9px;
-  border-radius: 20px;
-  font-weight: normal;
-}
-
-/* ===== Wheel ===== */
-.wheel-wrap {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 20px;
-  padding: 24px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-.wheel-container { position: relative; width: 300px; height: 300px; }
-#wheel {
-  width: 100%; height: 100%;
-  border-radius: 50%;
-  transition: transform 4.5s cubic-bezier(0.17, 0.67, 0.16, 1);
-  box-shadow: 0 0 40px rgba(124,92,255,0.4), inset 0 0 0 6px #1c1c2a, inset 0 0 0 8px var(--accent);
-}
-.pointer {
-  position: absolute;
-  top: -14px; left: 50%;
-  transform: translateX(-50%);
-  width: 0; height: 0;
-  border-left: 16px solid transparent;
-  border-right: 16px solid transparent;
-  border-top: 26px solid var(--gold);
-  filter: drop-shadow(0 0 8px var(--gold));
-  z-index: 10;
-}
-.wheel-center {
-  position: absolute;
-  top: 50%; left: 50%;
-  transform: translate(-50%,-50%);
-  width: 80px; height: 80px;
-  border-radius: 50%;
-  background: radial-gradient(circle, #2a2a3d, #15151f);
-  border: 3px solid var(--accent);
-  display: flex; align-items: center; justify-content: center;
-  padding: 8px;
-  z-index: 5;
-  box-shadow: 0 0 20px rgba(124,92,255,0.6);
-}
-.wheel-center svg { width: 100%; height: 100%; display: block; }
-.spin-btn {
-  margin-top: 22px;
-  padding: 14px 40px;
-  font-size: 17px;
-  font-weight: bold;
-  color: white;
-  background: linear-gradient(90deg, #7c5cff, #b48cff);
-  border: none;
-  border-radius: 30px;
-  cursor: pointer;
-  transition: all 0.2s;
-  box-shadow: 0 6px 20px rgba(124,92,255,0.5);
-}
-.spin-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 8px 26px rgba(124,92,255,0.7); }
-.spin-btn:disabled { opacity: 0.5; cursor: not-allowed; box-shadow: none; }
-.spins-info { margin-top: 12px; font-size: 13px; color: var(--muted); }
-.spins-info b { color: var(--accent2); }
-
-/* ===== Modal buttons ===== */
-.modal-btn {
-  width: 100%;
-  padding: 18px 20px;
-  background: linear-gradient(145deg, var(--card), var(--card2));
-  border: 1px solid var(--border);
-  border-radius: 18px;
-  color: var(--text);
-  font-size: 16px;
-  font-weight: bold;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  transition: all 0.2s;
-}
-.modal-btn:hover { border-color: var(--accent); transform: translateY(-2px); }
-.modal-btn .left { display: flex; align-items: center; gap: 12px; }
-.modal-btn .icon { font-size: 24px; }
-.modal-btn .badge {
-  background: var(--accent);
-  color: white;
-  font-size: 12px;
-  padding: 3px 10px;
-  border-radius: 20px;
-}
-
-/* ===== Modal ===== */
-.modal-bg {
-  position: fixed; inset: 0;
-  background: rgba(0,0,0,0.75);
-  backdrop-filter: blur(6px);
-  display: flex; align-items: center; justify-content: center;
-  z-index: 1000;
-  opacity: 0; visibility: hidden;
-  transition: all 0.3s;
-  padding: 20px;
-}
-.modal-bg.show { opacity: 1; visibility: visible; }
-.modal {
-  background: linear-gradient(145deg, var(--card), var(--card2));
-  border: 1px solid var(--accent);
-  border-radius: 22px;
-  padding: 24px 22px;
-  max-width: 420px;
-  width: 100%;
-  max-height: 85vh;
-  overflow-y: auto;
-  transform: scale(0.9);
-  transition: transform 0.3s;
-  box-shadow: 0 0 50px rgba(124,92,255,0.5);
-  position: relative;
-}
-.modal-bg.show .modal { transform: scale(1); }
-.modal-header {
-  display: flex; justify-content: space-between; align-items: center;
-  margin-bottom: 18px;
-}
-.modal-header h3 { font-size: 18px; }
-.modal-close {
-  background: rgba(255,255,255,0.05);
-  border: none;
-  color: var(--muted);
-  width: 34px; height: 34px;
-  border-radius: 50%;
-  font-size: 18px;
-  cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  transition: 0.2s;
-}
-.modal-close:hover { background: rgba(255,255,255,0.1); color: white; }
-
-/* ===== Daily Check ===== */
-.daily-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 10px;
-  margin-bottom: 14px;
-}
-.day {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 12px 6px;
-  text-align: center;
-  font-size: 12px;
-  transition: all 0.3s;
-  position: relative;
-}
-.day .num { font-size: 11px; color: var(--muted); margin-bottom: 4px; }
-.day .rew { font-size: 13px; font-weight: bold; }
-.day.claimed { background: linear-gradient(145deg, #1f3a2a, #15251c); border-color: var(--green); }
-.day.claimed .rew { color: var(--green); }
-.day.claimed::after { content: '✓'; position: absolute; top: 4px; right: 6px; color: var(--green); font-size: 12px; }
-.day.today { border-color: var(--accent); box-shadow: 0 0 14px rgba(124,92,255,0.4); }
-.day.bonus { grid-column: span 4; background: linear-gradient(145deg, #2a1f3a, #1a1525); }
-.day.bonus .rew { color: var(--accent2); }
-
-.check-btn {
-  width: 100%;
-  padding: 14px;
-  font-size: 16px;
-  font-weight: bold;
-  color: white;
-  background: linear-gradient(90deg, #4ade80, #22c55e);
-  border: none;
-  border-radius: 14px;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-.check-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(74,222,128,0.5); }
-.check-btn:disabled { opacity: 0.5; cursor: not-allowed; background: #2a2a3d; }
-
-/* ===== Referral ===== */
-.ref-card { background: transparent; }
-.ref-card p { font-size: 14px; color: var(--muted); margin-bottom: 18px; line-height: 1.7; }
-.ref-options { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-.ref-opt {
-  background: var(--card2);
-  border: 2px solid var(--border);
-  border-radius: 16px;
-  padding: 18px 12px;
-  text-align: center;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-.ref-opt:hover { border-color: var(--accent); transform: translateY(-2px); }
-.ref-opt .big { font-size: 24px; font-weight: bold; margin-bottom: 4px; }
-.ref-opt.p .big { color: var(--gold); }
-.ref-opt.t .big { color: var(--accent2); }
-.ref-opt .small { font-size: 12px; color: var(--muted); }
-
-.ref-locked { text-align: center; padding: 10px 0; }
-.ref-locked .big { font-size: 40px; margin-bottom: 10px; }
-.ref-locked .info { font-size: 15px; margin-bottom: 6px; }
-.ref-locked .info b { color: var(--accent2); }
-
-.ref-link-box {
-  background: rgba(255,255,255,0.03);
-  border: 1px solid var(--border);
-  padding: 12px;
-  border-radius: 12px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 10px;
-  margin: 14px 0;
-}
-.ref-link-box span {
-  color: var(--muted);
-  font-size: 12px;
-  word-break: break-all;
-  flex: 1;
-  text-align: left;
-}
-.ref-link-box button {
-  background: var(--accent);
-  border: none;
-  color: white;
-  padding: 8px 14px;
-  border-radius: 10px;
-  font-size: 12px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: 0.2s;
-  white-space: nowrap;
-}
-.ref-link-box button:hover { background: var(--accent2); }
-
-.ref-stats {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  margin-bottom: 14px;
-}
-.ref-stat {
-  background: var(--card2);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 12px;
-  text-align: center;
-}
-.ref-stat .num { font-size: 22px; font-weight: bold; color: var(--accent2); }
-.ref-stat .lbl { font-size: 11px; color: var(--muted); margin-top: 4px; }
-
-.ref-list { max-height: 200px; overflow-y: auto; margin-top: 10px; }
-.ref-list-item {
-  background: rgba(255,255,255,0.03);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 10px 14px;
-  margin-bottom: 6px;
-  font-size: 13px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.ref-list-item .name { color: var(--text); }
-.ref-list-item .date { color: var(--muted); font-size: 11px; }
-.ref-empty { text-align: center; padding: 20px; color: var(--muted); font-size: 13px; }
-
-/* ===== Bonus ===== */
-.bonus-info {
-  background: linear-gradient(145deg, #2a1f3a, #1a1525);
-  border: 1px solid var(--accent);
-  border-radius: 14px;
-  padding: 14px;
-  text-align: center;
-  margin-bottom: 16px;
-  font-size: 13px;
-}
-.bonus-info b { color: var(--gold); }
-.bonus-input-wrap { display: flex; gap: 8px; margin-bottom: 12px; }
-.bonus-input {
-  flex: 1;
-  padding: 14px 16px;
-  background: var(--card2);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  color: var(--text);
-  font-size: 16px;
-  text-align: center;
-  letter-spacing: 4px;
-  text-transform: uppercase;
-  font-weight: bold;
-  outline: none;
-  transition: 0.2s;
-  min-width: 0;
-}
-.bonus-input:focus { border-color: var(--accent); }
-.bonus-input::placeholder { letter-spacing: normal; font-weight: normal; color: var(--muted); }
-.bonus-btn {
-  padding: 14px 22px;
-  background: linear-gradient(90deg, #7c5cff, #b48cff);
-  border: none;
-  border-radius: 12px;
-  color: white;
-  font-size: 14px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: 0.2s;
-  white-space: nowrap;
-}
-.bonus-btn:hover:not(:disabled) { transform: translateY(-2px); }
-.bonus-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-.bonus-status {
-  text-align: center;
-  font-size: 13px;
-  padding: 10px;
-  border-radius: 10px;
-  margin-top: 10px;
-}
-.bonus-status.success { background: rgba(74,222,128,0.1); color: var(--green); border: 1px solid var(--green); }
-.bonus-status.error { background: rgba(239,68,68,0.1); color: var(--red); border: 1px solid var(--red); }
-
-/* ===== Result Modal ===== */
-.result-modal { text-align: center; }
-.result-modal .emoji { font-size: 54px; margin-bottom: 12px; }
-.result-modal h3 { font-size: 20px; margin-bottom: 8px; }
-.result-modal .res { font-size: 26px; font-weight: bold; margin: 14px 0; }
-.result-modal .res.p { color: var(--gold); }
-.result-modal .res.t { color: var(--accent2); }
-.result-modal .res.empty { color: var(--red); }
-.result-modal button {
-  margin-top: 10px;
-  padding: 11px 32px;
-  border-radius: 30px;
-  border: none;
-  background: linear-gradient(90deg, #7c5cff, #b48cff);
-  color: white;
-  font-size: 15px;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-/* ===== Channel / Onboarding ===== */
-.channel-box {
-  background: linear-gradient(145deg, #1a2540, #0f1525);
-  border: 1px solid #2a4080;
-  border-radius: 16px;
-  padding: 18px;
-  text-align: center;
-  margin-bottom: 14px;
-}
-.channel-box .title { font-size: 15px; font-weight: bold; margin-bottom: 6px; color: #7ab8ff; }
-.channel-box .desc { font-size: 12px; color: var(--muted); margin-bottom: 14px; line-height: 1.6; }
-.channel-box .btn {
-  display: inline-block;
-  padding: 12px 28px;
-  background: linear-gradient(90deg, #2a80ff, #4aa8ff);
-  color: white;
-  text-decoration: none;
-  border-radius: 12px;
-  font-size: 14px;
-  font-weight: bold;
-  transition: 0.2s;
-  border: none;
-  cursor: pointer;
-  width: 100%;
-}
-.channel-box .btn:hover { transform: translateY(-2px); }
-.channel-box .btn.joined {
-  background: linear-gradient(90deg, #22c55e, #4ade80);
-  cursor: default;
-}
-.ref-code-btns { display: flex; gap: 8px; margin-top: 10px; }
-.ref-code-btns button {
-  flex: 1;
-  padding: 12px;
-  border: none;
-  border-radius: 12px;
-  font-size: 14px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: 0.2s;
-  color: white;
-}
-.ref-code-btns .submit { background: linear-gradient(90deg, #7c5cff, #b48cff); }
-.ref-code-btns .skip { background: #2a2a3d; color: var(--muted); }
-.ref-code-btns button:hover { transform: translateY(-2px); }
-
-/* ===== Toast ===== */
-.toast {
-  position: fixed;
-  bottom: 24px; left: 50%;
-  transform: translateX(-50%) translateY(100px);
-  background: var(--card2);
-  border: 1px solid var(--accent);
-  color: var(--text);
-  padding: 14px 24px;
-  border-radius: 30px;
-  font-size: 14px;
-  z-index: 2000;
-  transition: transform 0.4s;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.6);
-  max-width: 90%;
-  text-align: center;
-}
-.toast.show { transform: translateX(-50%) translateY(0); }
-
-footer { text-align: center; padding: 30px; color: var(--muted); font-size: 12px; }
-
-@media (max-width: 420px) {
-  .wheel-container { width: 260px; height: 260px; }
-  .wallet .value { font-size: 22px; }
-  .splash-wolf { width: 200px; height: 200px; }
-}
-/* ============ Storage ============ */
+<!-- ===== Main JavaScript ===== -->
+<script>
 const KEY = 'wolf_data_v1';
-
 function defaultData() {
   return {
     username: 'Wolf_' + Math.floor(1000 + Math.random() * 9000),
-    points: 0,
-    tokens: 0,
-    spins: 2,
-    lastSpinTime: Date.now(),
-    dailyStreak: 0,
-    lastDaily: null,
-    claimedDays: [],
-    refChoice: null,
-    refCount: 0,
-    refLocked: false,
-    refList: [],
-    usedBonusCodes: [],
-    refCodeUsed: null,
-    channelJoined: false,
-    onboardingDone: false
+    points: 0, tokens: 0, spins: 2, lastSpinTime: Date.now(),
+    dailyStreak: 0, lastDaily: null, claimedDays: [],
+    refChoice: null, refCount: 0, refLocked: false, refList: [],
+    usedBonusCodes: [], refCodeUsed: null,
+    channelJoined: false, onboardingDone: false
   };
 }
-
 let data = load();
 function load() {
   try {
@@ -880,7 +425,6 @@ function load() {
 }
 function save() { localStorage.setItem(KEY, JSON.stringify(data)); }
 
-/* ============ Config ============ */
 const CONFIG = {
   WEBHOOK_URL: '',
   BOT_USERNAME: 'Wolf_airdrops_bot',
@@ -889,7 +433,6 @@ const CONFIG = {
   REF_TOKENS: 15
 };
 
-/* ============ Utils ============ */
 function today() { return new Date().toDateString(); }
 function toast(msg) {
   const t = document.getElementById('toast');
@@ -909,26 +452,21 @@ function closeModal(name) {
   document.getElementById('modal-' + name).classList.remove('show');
   document.body.style.overflow = '';
 }
-function openResult(emoji, title, res, type='') {
+function openResult(emoji, title, res, type) {
   document.getElementById('rEmoji').textContent = emoji;
   document.getElementById('rTitle').textContent = title;
   const r = document.getElementById('rRes');
   r.textContent = res;
-  r.className = 'res ' + type;
+  r.className = 'res ' + (type || '');
   document.getElementById('modal-result').classList.add('show');
   document.body.style.overflow = 'hidden';
 }
-
 document.querySelectorAll('.modal-bg').forEach(bg => {
   bg.addEventListener('click', e => {
-    if (e.target === bg) {
-      bg.classList.remove('show');
-      document.body.style.overflow = '';
-    }
+    if (e.target === bg) { bg.classList.remove('show'); document.body.style.overflow = ''; }
   });
 });
 
-/* ============ Onboarding ============ */
 function checkOnboarding() {
   const onboarding = document.getElementById('onboardingSection');
   const main = document.getElementById('mainContent');
@@ -947,7 +485,6 @@ function checkOnboarding() {
     document.getElementById('refCodeBox').style.display = 'none';
   }
 }
-
 function joinChannel() {
   window.open(CONFIG.CHANNEL_LINK, '_blank');
   setTimeout(() => {
@@ -961,7 +498,6 @@ function joinChannel() {
     toast('✅ Membership recorded, now enter your referral code');
   }, 1200);
 }
-
 function submitRefCode() {
   const input = document.getElementById('refCodeInput');
   const code = input.value.trim();
@@ -973,18 +509,13 @@ function submitRefCode() {
     fetch(CONFIG.WEBHOOK_URL + '/api/register', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        userId: data.username,
-        refCode: code,
-        timestamp: new Date().toISOString()
-      })
+      body: JSON.stringify({ userId: data.username, refCode: code, timestamp: new Date().toISOString() })
     }).catch(e => console.log('Webhook error:', e));
   }
   checkOnboarding();
   render();
   toast('✅ Code saved! All sections unlocked');
 }
-
 function skipRefCode() {
   data.onboardingDone = true;
   data.refCodeUsed = null;
@@ -994,12 +525,10 @@ function skipRefCode() {
   toast('Welcome 🐺 All sections unlocked');
 }
 
-/* ============ Render ============ */
 function render() {
   document.getElementById('username').textContent = data.username;
   document.getElementById('pointsVal').textContent = data.points;
   document.getElementById('tokensVal').textContent = data.tokens;
-
   const H20 = 20 * 60 * 60 * 1000;
   if (Date.now() - data.lastSpinTime >= H20) {
     data.spins = 2;
@@ -1007,38 +536,33 @@ function render() {
     save();
   }
   document.getElementById('spinBadge').textContent = data.spins + ' spins';
-  document.getElementById('spinsInfo').innerHTML = `Spins remaining: <b>${data.spins}</b>`;
+  document.getElementById('spinsInfo').innerHTML = 'Spins remaining: <b>' + data.spins + '</b>';
   document.getElementById('spinBtn').disabled = (data.spins <= 0) || !data.onboardingDone;
-
   const dayNow = Math.min(data.claimedDays.length + 1, 7);
   document.getElementById('dailyBadge').textContent = 'Day ' + dayNow;
   document.getElementById('refBadge').textContent = (data.refCount || 0) + ' users';
-
   renderDaily();
   renderRef();
 }
 
-/* ============ Wheel ============ */
 const SECTORS = [
-  { label: 'Empty',       type: 'empty',  value: 0,  color: '#3a3a4d' },
-  { label: '1 Point',     type: 'points', value: 1,  color: '#7c5cff' },
-  { label: '5 Points',    type: 'points', value: 5,  color: '#8c6cff' },
-  { label: '15 Points',   type: 'points', value: 15, color: '#7c5cff' },
-  { label: '25 Points',   type: 'points', value: 25, color: '#8c6cff' },
-  { label: '50 Points',   type: 'points', value: 50, color: '#7c5cff' },
-  { label: '75 Points',   type: 'points', value: 75, color: '#b48cff' },
-  { label: '1 Token',     type: 'token',  value: 1,  color: '#6d4cd4' },
-  { label: '5 Tokens',    type: 'token',  value: 5,  color: '#b48cff' },
-  { label: '10 Tokens',   type: 'token',  value: 10, color: '#6d4cd4' },
-  { label: '20 Tokens',   type: 'token',  value: 20, color: '#b48cff' },
-  { label: '40 Tokens',   type: 'token',  value: 40, color: '#9d6cff' }
+  { label: 'Empty',     type: 'empty',  value: 0,  color: '#3a3a4d' },
+  { label: '1 Point',   type: 'points', value: 1,  color: '#7c5cff' },
+  { label: '5 Points',  type: 'points', value: 5,  color: '#8c6cff' },
+  { label: '15 Points', type: 'points', value: 15, color: '#7c5cff' },
+  { label: '25 Points', type: 'points', value: 25, color: '#8c6cff' },
+  { label: '50 Points', type: 'points', value: 50, color: '#7c5cff' },
+  { label: '75 Points', type: 'points', value: 75, color: '#b48cff' },
+  { label: '1 Token',   type: 'token',  value: 1,  color: '#6d4cd4' },
+  { label: '5 Tokens',  type: 'token',  value: 5,  color: '#b48cff' },
+  { label: '10 Tokens', type: 'token',  value: 10, color: '#6d4cd4' },
+  { label: '20 Tokens', type: 'token',  value: 20, color: '#b48cff' },
+  { label: '40 Tokens', type: 'token',  value: 40, color: '#9d6cff' }
 ];
-
 const canvas = document.getElementById('wheel');
 const ctx = canvas.getContext('2d');
 let currentAngle = 0;
 let spinning = false;
-
 function drawWheel() {
   const size = canvas.width;
   const r = size / 2;
@@ -1069,7 +593,6 @@ function drawWheel() {
   }
 }
 drawWheel();
-
 function spin() {
   if (spinning) return;
   if (!data.onboardingDone) { toast('Please complete setup first'); return; }
@@ -1078,7 +601,6 @@ function spin() {
   data.spins--;
   save();
   render();
-
   const n = SECTORS.length;
   const arcDeg = 360 / n;
   const targetIndex = Math.floor(Math.random() * n);
@@ -1089,8 +611,7 @@ function spin() {
   let delta = targetMod - currentMod;
   if (delta < 0) delta += 360;
   currentAngle += 360 * 6 + delta;
-  canvas.style.transform = `rotate(${currentAngle}deg)`;
-
+  canvas.style.transform = 'rotate(' + currentAngle + 'deg)';
   setTimeout(() => {
     spinning = false;
     const s = SECTORS[targetIndex];
@@ -1108,7 +629,6 @@ function spin() {
   }, 4600);
 }
 
-/* ============ Daily Check ============ */
 const DAILY = [
   { day: 1, type: 'points', value: 3 },
   { day: 2, type: 'token',  value: 3 },
@@ -1118,12 +638,10 @@ const DAILY = [
   { day: 6, type: 'token',  value: 10 },
   { day: 7, type: 'points', value: 20 }
 ];
-
 function renderDaily() {
   const grid = document.getElementById('dailyGrid');
   grid.innerHTML = '';
   const t = today();
-
   if (data.lastDaily && data.lastDaily !== t) {
     const last = new Date(data.lastDaily);
     const now = new Date(t);
@@ -1134,7 +652,6 @@ function renderDaily() {
       save();
     }
   }
-
   DAILY.forEach(d => {
     const div = document.createElement('div');
     div.className = 'day';
@@ -1143,15 +660,13 @@ function renderDaily() {
     if (claimed) div.classList.add('claimed');
     if (isToday) div.classList.add('today');
     const sym = d.type === 'points' ? '⭐' : '🐺';
-    div.innerHTML = `<div class="num">Day ${d.day}</div><div class="rew">${sym} ${d.value}</div>`;
+    div.innerHTML = '<div class="num">Day ' + d.day + '</div><div class="rew">' + sym + ' ' + d.value + '</div>';
     grid.appendChild(div);
   });
-
   const bonus = document.createElement('div');
   bonus.className = 'day bonus';
-  bonus.innerHTML = `<div class="num">🎉 7-Day Streak Bonus</div><div class="rew">🐺 15 Wolf Tokens</div>`;
+  bonus.innerHTML = '<div class="num">🎉 7-Day Streak Bonus</div><div class="rew">🐺 15 Wolf Tokens</div>';
   grid.appendChild(bonus);
-
   const btn = document.getElementById('checkBtn');
   if (data.lastDaily === today()) {
     btn.disabled = true;
@@ -1164,97 +679,78 @@ function renderDaily() {
     btn.textContent = "Claim Today's Reward";
   }
 }
-
 function dailyCheck() {
   if (data.lastDaily === today()) { toast('Already claimed today!'); return; }
   if (data.claimedDays.length >= 7) { toast('Cycle complete!'); return; }
-
   const day = data.claimedDays.length + 1;
   const reward = DAILY[day - 1];
   data.claimedDays.push(day);
   data.lastDaily = today();
   data.dailyStreak++;
-
   let msg = '';
   if (reward.type === 'points') { data.points += reward.value; msg = reward.value + ' Points'; }
   else { data.tokens += reward.value; msg = reward.value + ' Wolf Tokens'; }
-
   if (data.claimedDays.length === 7) {
     data.tokens += 15;
     msg += ' + 🎁 15 Bonus Tokens!';
   }
-
   save();
   render();
   openResult('🎁', 'Day ' + day + ' Reward', msg, reward.type === 'points' ? 'p' : 't');
 }
 
-/* ============ Referral ============ */
 function renderRef() {
   const card = document.getElementById('refCard');
-
   if (!data.refLocked) {
-    card.innerHTML = `
-      <p>Choose once what you want per referral. <b>This choice cannot be changed!</b></p>
-      <div class="ref-options">
-        <div class="ref-opt p" onclick="chooseRef('points')">
-          <div class="big">⭐ ${CONFIG.REF_POINTS}</div>
-          <div class="small">Points per referral</div>
-        </div>
-        <div class="ref-opt t" onclick="chooseRef('tokens')">
-          <div class="big">🐺 ${CONFIG.REF_TOKENS}</div>
-          <div class="small">Tokens per referral</div>
-        </div>
-      </div>
-    `;
+    card.innerHTML =
+      '<p>Choose once what you want per referral. <b>This choice cannot be changed!</b></p>' +
+      '<div class="ref-options">' +
+        '<div class="ref-opt p" onclick="chooseRef(\'points\')">' +
+          '<div class="big">⭐ ' + CONFIG.REF_POINTS + '</div>' +
+          '<div class="small">Points per referral</div>' +
+        '</div>' +
+        '<div class="ref-opt t" onclick="chooseRef(\'tokens\')">' +
+          '<div class="big">🐺 ' + CONFIG.REF_TOKENS + '</div>' +
+          '<div class="small">Tokens per referral</div>' +
+        '</div>' +
+      '</div>';
     return;
   }
-
-  const refLink = `https://t.me/${CONFIG.BOT_USERNAME}?start=ref_${data.username}`;
+  const refLink = 'https://t.me/' + CONFIG.BOT_USERNAME + '?start=ref_' + data.username;
   const choiceLabel = data.refChoice === 'points'
-    ? `${CONFIG.REF_POINTS} Points`
-    : `${CONFIG.REF_TOKENS} Wolf Tokens`;
+    ? CONFIG.REF_POINTS + ' Points'
+    : CONFIG.REF_TOKENS + ' Wolf Tokens';
   const totalReward = (data.refCount || 0) * (data.refChoice === 'points' ? CONFIG.REF_POINTS : CONFIG.REF_TOKENS);
-
   let listHtml = '';
   if (data.refList && data.refList.length > 0) {
-    listHtml = data.refList.map(r => `
-      <div class="ref-list-item">
-        <span class="name">🐺 ${r.id}</span>
-        <span class="date">${r.date || ''}</span>
-      </div>
-    `).join('');
+    listHtml = data.refList.map(r =>
+      '<div class="ref-list-item">' +
+        '<span class="name">🐺 ' + r.id + '</span>' +
+        '<span class="date">' + (r.date || '') + '</span>' +
+      '</div>'
+    ).join('');
   } else {
     listHtml = '<div class="ref-empty">No referrals yet</div>';
   }
-
-  card.innerHTML = `
-    <div class="ref-locked">
-      <div class="big">✅</div>
-      <div class="info">Your choice: <b>${choiceLabel}</b> per referral</div>
-    </div>
-    <div class="ref-link-box">
-      <span id="refLinkText">${refLink}</span>
-      <button onclick="copyRefLink()">📋 Copy</button>
-    </div>
-    <div class="ref-stats">
-      <div class="ref-stat">
-        <div class="num">${data.refCount || 0}</div>
-        <div class="lbl">Total Referrals</div>
-      </div>
-      <div class="ref-stat">
-        <div class="num">${totalReward}</div>
-        <div class="lbl">Total Reward</div>
-      </div>
-    </div>
-    <div style="font-size:13px;color:var(--muted);margin-bottom:8px;">📋 Referral List:</div>
-    <div class="ref-list">${listHtml}</div>
-  `;
+  card.innerHTML =
+    '<div class="ref-locked">' +
+      '<div class="big">✅</div>' +
+      '<div class="info">Your choice: <b>' + choiceLabel + '</b> per referral</div>' +
+    '</div>' +
+    '<div class="ref-link-box">' +
+      '<span id="refLinkText">' + refLink + '</span>' +
+      '<button onclick="copyRefLink()">📋 Copy</button>' +
+    '</div>' +
+    '<div class="ref-stats">' +
+      '<div class="ref-stat"><div class="num">' + (data.refCount || 0) + '</div><div class="lbl">Total Referrals</div></div>' +
+      '<div class="ref-stat"><div class="num">' + totalReward + '</div><div class="lbl">Total Reward</div></div>' +
+    '</div>' +
+    '<div style="font-size:13px;color:var(--muted);margin-bottom:8px;">📋 Referral List:</div>' +
+    '<div class="ref-list">' + listHtml + '</div>';
 }
-
 function chooseRef(type) {
-  const label = type === 'points' ? `${CONFIG.REF_POINTS} Points` : `${CONFIG.REF_TOKENS} Wolf Tokens`;
-  if (!confirm(`Are you sure? Choice: ${label} per referral — this cannot be changed!`)) return;
+  const label = type === 'points' ? CONFIG.REF_POINTS + ' Points' : CONFIG.REF_TOKENS + ' Wolf Tokens';
+  if (!confirm('Are you sure? Choice: ' + label + ' per referral — this cannot be changed!')) return;
   data.refChoice = type;
   data.refLocked = true;
   save();
@@ -1262,9 +758,8 @@ function chooseRef(type) {
   render();
   toast('Choice saved ✅');
 }
-
 function copyRefLink() {
-  const link = `https://t.me/${CONFIG.BOT_USERNAME}?start=ref_${data.username}`;
+  const link = 'https://t.me/' + CONFIG.BOT_USERNAME + '?start=ref_' + data.username;
   if (navigator.clipboard) {
     navigator.clipboard.writeText(link).then(() => toast('Link copied ✅'));
   } else {
@@ -1278,22 +773,12 @@ function copyRefLink() {
   }
 }
 
-/* ============ Bonus ============ */
 function redeemBonus() {
   const input = document.getElementById('bonusInput');
   const status = document.getElementById('bonusStatus');
   const code = input.value.trim().toUpperCase();
-
-  if (!code) {
-    status.className = 'bonus-status error';
-    status.textContent = '❌ Enter a code';
-    return;
-  }
-  if (code.length !== 5) {
-    status.className = 'bonus-status error';
-    status.textContent = '❌ Code must be 5 characters';
-    return;
-  }
+  if (!code) { status.className = 'bonus-status error'; status.textContent = '❌ Enter a code'; return; }
+  if (code.length !== 5) { status.className = 'bonus-status error'; status.textContent = '❌ Code must be 5 characters'; return; }
   if (data.usedBonusCodes && data.usedBonusCodes.includes(code)) {
     status.className = 'bonus-status error';
     status.textContent = '❌ You already used this code';
@@ -1304,20 +789,17 @@ function redeemBonus() {
     status.textContent = '❌ Invalid code';
     return;
   }
-
   data.points += 25;
   data.tokens += 10;
   if (!data.usedBonusCodes) data.usedBonusCodes = [];
   data.usedBonusCodes.push(code);
   save();
   render();
-
   status.className = 'bonus-status success';
-  status.textContent = `✅ Code verified! +25 Points +10 Tokens 🎉`;
+  status.textContent = '✅ Code verified! +25 Points +10 Tokens 🎉';
   input.value = '';
   input.disabled = true;
   document.getElementById('bonusBtn').disabled = true;
-
   setTimeout(() => {
     input.disabled = false;
     document.getElementById('bonusBtn').disabled = false;
@@ -1326,11 +808,10 @@ function redeemBonus() {
   }, 3000);
 }
 
-/* ============ Sync referrals ============ */
 async function syncReferrals() {
   if (!CONFIG.WEBHOOK_URL) return;
   try {
-    const res = await fetch(`${CONFIG.WEBHOOK_URL}/api/referrals/${data.username}`);
+    const res = await fetch(CONFIG.WEBHOOK_URL + '/api/referrals/' + data.username);
     const json = await res.json();
     if (json.success && json.referrals) {
       const serverCount = json.referrals.length;
@@ -1346,27 +827,24 @@ async function syncReferrals() {
         if (!data.refList) data.refList = [];
         json.referrals.forEach(id => {
           if (!data.refList.find(r => r.id === id)) {
-            data.refList.push({ id, date: '' });
+            data.refList.push({ id: id, date: '' });
           }
         });
         save();
         render();
-        toast(`🎉 ${newRefs} new referral(s)! Reward added`);
+        toast('🎉 ' + newRefs + ' new referral(s)! Reward added');
       }
     }
-  } catch (e) {
-    console.log('Sync error:', e);
-  }
+  } catch (e) { console.log('Sync error:', e); }
 }
 
-/* ============ Init ============ */
 render();
 checkOnboarding();
-setTimeout(() => {
-  document.getElementById('splash').classList.add('hide');
-}, 2500);
-
+setTimeout(() => { document.getElementById('splash').classList.add('hide'); }, 2500);
 if (CONFIG.WEBHOOK_URL) {
   setInterval(syncReferrals, 30000);
   setTimeout(syncReferrals, 3000);
 }
+</script>
+</body>
+  </html>
