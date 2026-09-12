@@ -1,0 +1,1217 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Wolf 🐺</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; }
+  :root {
+    --bg: #0a0a0f;
+    --card: #15151f;
+    --card2: #1c1c2a;
+    --border: #2a2a3d;
+    --text: #e8e8f0;
+    --muted: #8888a0;
+    --accent: #7c5cff;
+    --accent2: #b48cff;
+    --gold: #ffb84d;
+    --green: #4ade80;
+    --red: #ef4444;
+  }
+  body {
+    background: radial-gradient(circle at top, #1a1a2e 0%, #0a0a0f 70%);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ===== صفحه ورود ===== */
+  #splash {
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(circle at center, #1a1a2e 0%, #050508 80%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    transition: opacity 0.8s ease, visibility 0.8s;
+  }
+  #splash.hide { opacity: 0; visibility: hidden; }
+  .splash-wolf {
+    width: 220px;
+    height: auto;
+    max-height: 55vh;
+    object-fit: contain;
+    border-radius: 18px;
+    filter: drop-shadow(0 0 30px rgba(124, 92, 255, 0.7));
+    animation: wolfPulse 2s ease-in-out infinite;
+  }
+  @keyframes wolfPulse {
+    0%, 100% { transform: scale(1); filter: drop-shadow(0 0 20px rgba(124,92,255,0.6)); }
+    50% { transform: scale(1.05); filter: drop-shadow(0 0 45px rgba(180,140,255,0.95)); }
+  }
+  #splash h1 {
+    margin-top: 24px;
+    font-size: 42px;
+    letter-spacing: 8px;
+    background: linear-gradient(90deg, #7c5cff, #b48cff, #7c5cff);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shine 3s linear infinite;
+  }
+  @keyframes shine { to { background-position: 200% center; } }
+  #splash .loader {
+    margin-top: 30px;
+    width: 160px;
+    height: 4px;
+    background: #1c1c2a;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  #splash .loader::after {
+    content: '';
+    display: block;
+    height: 100%;
+    width: 0;
+    background: linear-gradient(90deg, #7c5cff, #b48cff);
+    animation: load 2.3s ease forwards;
+  }
+  @keyframes load { to { width: 100%; } }
+
+  /* ===== هدر ===== */
+  header {
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border);
+    background: rgba(15,15,25,0.8);
+    backdrop-filter: blur(10px);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  header .logo {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 22px; font-weight: bold; letter-spacing: 3px;
+    background: linear-gradient(90deg, #7c5cff, #b48cff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  header .logo .logo-icon { font-size: 26px; -webkit-text-fill-color: initial; }
+  header .user {
+    display: flex; align-items: center; gap: 8px;
+    background: var(--card);
+    padding: 8px 14px;
+    border-radius: 30px;
+    border: 1px solid var(--border);
+    font-size: 14px;
+  }
+  header .user .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); box-shadow: 0 0 10px var(--green); }
+
+  /* ===== کارت‌های ارز ===== */
+  .wallets {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    padding: 20px;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  .wallet {
+    background: linear-gradient(145deg, var(--card), var(--card2));
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 18px;
+    position: relative;
+    overflow: hidden;
+  }
+  .wallet::before {
+    content: '';
+    position: absolute;
+    top: -50%; right: -50%;
+    width: 100%; height: 100%;
+    background: radial-gradient(circle, rgba(124,92,255,0.15), transparent 70%);
+  }
+  .wallet .label { font-size: 13px; color: var(--muted); margin-bottom: 6px; position: relative; }
+  .wallet .value { font-size: 26px; font-weight: bold; position: relative; }
+  .wallet.points .value { color: var(--gold); }
+  .wallet.tokens .value { color: var(--accent2); }
+  .wallet .icon { position: absolute; top: 14px; left: 14px; font-size: 22px; opacity: 0.4; }
+
+  /* ===== بخش‌ها ===== */
+  .section {
+    max-width: 600px;
+    margin: 0 auto 24px;
+    padding: 0 20px;
+  }
+  .section h2 {
+    font-size: 18px;
+    margin-bottom: 14px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .section h2 .badge {
+    background: var(--accent);
+    color: white;
+    font-size: 11px;
+    padding: 3px 9px;
+    border-radius: 20px;
+    font-weight: normal;
+  }
+
+  /* ===== گردونه ===== */
+  .wheel-wrap {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .wheel-container { position: relative; width: 300px; height: 300px; }
+  #wheel {
+    width: 100%; height: 100%;
+    border-radius: 50%;
+    transition: transform 4.5s cubic-bezier(0.17, 0.67, 0.16, 1);
+    box-shadow: 0 0 40px rgba(124,92,255,0.4), inset 0 0 0 6px #1c1c2a, inset 0 0 0 8px var(--accent);
+  }
+  .pointer {
+    position: absolute;
+    top: -14px; left: 50%;
+    transform: translateX(-50%);
+    width: 0; height: 0;
+    border-left: 16px solid transparent;
+    border-right: 16px solid transparent;
+    border-top: 26px solid var(--gold);
+    filter: drop-shadow(0 0 8px var(--gold));
+    z-index: 10;
+  }
+  .wheel-center {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%,-50%);
+    width: 70px; height: 70px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #2a2a3d, #15151f);
+    border: 3px solid var(--accent);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28px;
+    z-index: 5;
+    box-shadow: 0 0 20px rgba(124,92,255,0.6);
+  }
+  .spin-btn {
+    margin-top: 22px;
+    padding: 14px 40px;
+    font-size: 17px;
+    font-weight: bold;
+    color: white;
+    background: linear-gradient(90deg, #7c5cff, #b48cff);
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 6px 20px rgba(124,92,255,0.5);
+  }
+  .spin-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 8px 26px rgba(124,92,255,0.7); }
+  .spin-btn:disabled { opacity: 0.5; cursor: not-allowed; box-shadow: none; }
+  .spins-info { margin-top: 12px; font-size: 13px; color: var(--muted); }
+  .spins-info b { color: var(--accent2); }
+
+  /* ===== دکمه باز کردن مودال ===== */
+  .modal-btn {
+    width: 100%;
+    padding: 18px 20px;
+    background: linear-gradient(145deg, var(--card), var(--card2));
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    color: var(--text);
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: all 0.2s;
+  }
+  .modal-btn:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .modal-btn .left { display: flex; align-items: center; gap: 12px; }
+  .modal-btn .icon { font-size: 24px; }
+  .modal-btn .badge {
+    background: var(--accent);
+    color: white;
+    font-size: 12px;
+    padding: 3px 10px;
+    border-radius: 20px;
+  }
+
+  /* ===== مودال ===== */
+  .modal-bg {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.75);
+    backdrop-filter: blur(6px);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 1000;
+    opacity: 0; visibility: hidden;
+    transition: all 0.3s;
+    padding: 20px;
+  }
+  .modal-bg.show { opacity: 1; visibility: visible; }
+  .modal {
+    background: linear-gradient(145deg, var(--card), var(--card2));
+    border: 1px solid var(--accent);
+    border-radius: 22px;
+    padding: 24px 22px;
+    max-width: 420px;
+    width: 100%;
+    max-height: 85vh;
+    overflow-y: auto;
+    transform: scale(0.9);
+    transition: transform 0.3s;
+    box-shadow: 0 0 50px rgba(124,92,255,0.5);
+    position: relative;
+  }
+  .modal-bg.show .modal { transform: scale(1); }
+  .modal-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 18px;
+  }
+  .modal-header h3 { font-size: 18px; }
+  .modal-close {
+    background: rgba(255,255,255,0.05);
+    border: none;
+    color: var(--muted);
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    font-size: 18px;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: 0.2s;
+  }
+  .modal-close:hover { background: rgba(255,255,255,0.1); color: white; }
+
+  /* ===== دیلی چک ===== */
+  .daily-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+  .day {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 12px 6px;
+    text-align: center;
+    font-size: 12px;
+    transition: all 0.3s;
+    position: relative;
+  }
+  .day .num { font-size: 11px; color: var(--muted); margin-bottom: 4px; }
+  .day .rew { font-size: 13px; font-weight: bold; }
+  .day.claimed { background: linear-gradient(145deg, #1f3a2a, #15251c); border-color: var(--green); }
+  .day.claimed .rew { color: var(--green); }
+  .day.claimed::after { content: '✓'; position: absolute; top: 4px; left: 6px; color: var(--green); font-size: 12px; }
+  .day.today { border-color: var(--accent); box-shadow: 0 0 14px rgba(124,92,255,0.4); }
+  .day.bonus { grid-column: span 4; background: linear-gradient(145deg, #2a1f3a, #1a1525); }
+  .day.bonus .rew { color: var(--accent2); }
+
+  .check-btn {
+    width: 100%;
+    padding: 14px;
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    background: linear-gradient(90deg, #4ade80, #22c55e);
+    border: none;
+    border-radius: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .check-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(74,222,128,0.5); }
+  .check-btn:disabled { opacity: 0.5; cursor: not-allowed; background: #2a2a3d; }
+
+  /* ===== زیرمجموعه ===== */
+  .ref-card { background: transparent; }
+  .ref-card p { font-size: 14px; color: var(--muted); margin-bottom: 18px; line-height: 1.7; }
+  .ref-options { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .ref-opt {
+    background: var(--card2);
+    border: 2px solid var(--border);
+    border-radius: 16px;
+    padding: 18px 12px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .ref-opt:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .ref-opt .big { font-size: 24px; font-weight: bold; margin-bottom: 4px; }
+  .ref-opt.p .big { color: var(--gold); }
+  .ref-opt.t .big { color: var(--accent2); }
+  .ref-opt .small { font-size: 12px; color: var(--muted); }
+
+  .ref-locked { text-align: center; padding: 10px 0; }
+  .ref-locked .big { font-size: 40px; margin-bottom: 10px; }
+  .ref-locked .info { font-size: 15px; margin-bottom: 6px; }
+  .ref-locked .info b { color: var(--accent2); }
+  .ref-locked .note { font-size: 12px; color: var(--muted); margin-top: 8px; }
+
+  .ref-link-box {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border);
+    padding: 12px;
+    border-radius: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    margin: 14px 0;
+  }
+  .ref-link-box span {
+    color: var(--muted);
+    font-size: 12px;
+    word-break: break-all;
+    flex: 1;
+    direction: ltr;
+    text-align: left;
+  }
+  .ref-link-box button {
+    background: var(--accent);
+    border: none;
+    color: white;
+    padding: 8px 14px;
+    border-radius: 10px;
+    font-size: 12px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
+    white-space: nowrap;
+  }
+  .ref-link-box button:hover { background: var(--accent2); }
+
+  .ref-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+  .ref-stat {
+    background: var(--card2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 12px;
+    text-align: center;
+  }
+  .ref-stat .num { font-size: 22px; font-weight: bold; color: var(--accent2); }
+  .ref-stat .lbl { font-size: 11px; color: var(--muted); margin-top: 4px; }
+
+  .ref-list {
+    max-height: 200px;
+    overflow-y: auto;
+    margin-top: 10px;
+  }
+  .ref-list-item {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 14px;
+    margin-bottom: 6px;
+    font-size: 13px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .ref-list-item .name { color: var(--text); }
+  .ref-list-item .date { color: var(--muted); font-size: 11px; }
+  .ref-empty { text-align: center; padding: 20px; color: var(--muted); font-size: 13px; }
+
+  /* ===== بونوس ===== */
+  .bonus-info {
+    background: linear-gradient(145deg, #2a1f3a, #1a1525);
+    border: 1px solid var(--accent);
+    border-radius: 14px;
+    padding: 14px;
+    text-align: center;
+    margin-bottom: 16px;
+    font-size: 13px;
+  }
+  .bonus-info b { color: var(--gold); }
+  .bonus-input-wrap {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  .bonus-input {
+    flex: 1;
+    padding: 14px 16px;
+    background: var(--card2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    color: var(--text);
+    font-size: 16px;
+    text-align: center;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    font-weight: bold;
+    outline: none;
+    transition: 0.2s;
+  }
+  .bonus-input:focus { border-color: var(--accent); }
+  .bonus-input::placeholder { letter-spacing: normal; font-weight: normal; color: var(--muted); }
+  .bonus-btn {
+    padding: 14px 22px;
+    background: linear-gradient(90deg, #7c5cff, #b48cff);
+    border: none;
+    border-radius: 12px;
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
+    white-space: nowrap;
+  }
+  .bonus-btn:hover:not(:disabled) { transform: translateY(-2px); }
+  .bonus-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .bonus-status {
+    text-align: center;
+    font-size: 13px;
+    padding: 10px;
+    border-radius: 10px;
+    margin-top: 10px;
+  }
+  .bonus-status.success { background: rgba(74,222,128,0.1); color: var(--green); border: 1px solid var(--green); }
+  .bonus-status.error { background: rgba(239,68,68,0.1); color: var(--red); border: 1px solid var(--red); }
+
+  /* ===== مودال نتیجه ===== */
+  .result-modal { text-align: center; }
+  .result-modal .emoji { font-size: 54px; margin-bottom: 12px; }
+  .result-modal h3 { font-size: 20px; margin-bottom: 8px; }
+  .result-modal .res { font-size: 26px; font-weight: bold; margin: 14px 0; }
+  .result-modal .res.p { color: var(--gold); }
+  .result-modal .res.t { color: var(--accent2); }
+  .result-modal .res.empty { color: var(--red); }
+  .result-modal button {
+    margin-top: 10px;
+    padding: 11px 32px;
+    border-radius: 30px;
+    border: none;
+    background: linear-gradient(90deg, #7c5cff, #b48cff);
+    color: white;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+
+  /* ===== کانال ===== */
+  .channel-box {
+    background: linear-gradient(145deg, #1a2540, #0f1525);
+    border: 1px solid #2a4080;
+    border-radius: 16px;
+    padding: 16px;
+    text-align: center;
+    margin-bottom: 16px;
+  }
+  .channel-box .title { font-size: 15px; font-weight: bold; margin-bottom: 6px; color: #7ab8ff; }
+  .channel-box .desc { font-size: 12px; color: var(--muted); margin-bottom: 12px; }
+  .channel-box .btn {
+    display: inline-block;
+    padding: 12px 28px;
+    background: linear-gradient(90deg, #2a80ff, #4aa8ff);
+    color: white;
+    text-decoration: none;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: bold;
+    transition: 0.2s;
+    border: none;
+    cursor: pointer;
+  }
+  .channel-box .btn:hover { transform: translateY(-2px); }
+  .channel-box .joined {
+    background: linear-gradient(90deg, #22c55e, #4ade80);
+  }
+
+  /* ===== توست ===== */
+  .toast {
+    position: fixed;
+    bottom: 24px; left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: var(--card2);
+    border: 1px solid var(--accent);
+    color: var(--text);
+    padding: 14px 24px;
+    border-radius: 30px;
+    font-size: 14px;
+    z-index: 2000;
+    transition: transform 0.4s;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+    max-width: 90%;
+    text-align: center;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+
+  footer { text-align: center; padding: 30px; color: var(--muted); font-size: 12px; }
+
+  @media (max-width: 420px) {
+    .wheel-container { width: 260px; height: 260px; }
+    .wallet .value { font-size: 22px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== صفحه ورود ===== -->
+<div id="splash">
+  <img src="wolf.png" alt="Wolf" class="splash-wolf">
+  <h1>WOLF</h1>
+  <div class="loader"></div>
+</div>
+
+<!-- ===== هدر ===== -->
+<header>
+  <div class="logo">
+    <span class="logo-icon">🐺</span>
+    WOLF
+  </div>
+  <div class="user">
+    <span class="dot"></span>
+    <span id="username">Wolf_0000</span>
+  </div>
+</header>
+
+<!-- ===== کیف پول ===== -->
+<div class="wallets">
+  <div class="wallet points">
+    <span class="icon">⭐</span>
+    <div class="label">امتیاز</div>
+    <div class="value" id="pointsVal">0</div>
+  </div>
+  <div class="wallet tokens">
+    <span class="icon">🐺</span>
+    <div class="label">توکن Wolf</div>
+    <div class="value" id="tokensVal">0</div>
+  </div>
+</div>
+
+<!-- ===== گردونه (توی صفحه اصلی) ===== -->
+<div class="section">
+  <h2>🎡 گردونه شانس <span class="badge" id="spinBadge">۲ فرصت</span></h2>
+  <div class="wheel-wrap">
+    <div class="wheel-container">
+      <div class="pointer"></div>
+      <canvas id="wheel" width="600" height="600"></canvas>
+      <div class="wheel-center">🐺</div>
+    </div>
+    <button class="spin-btn" id="spinBtn" onclick="spin()">بچرخون!</button>
+    <div class="spins-info" id="spinsInfo">فرصت‌های باقی‌مانده: <b>۲</b></div>
+  </div>
+</div>
+
+<!-- ===== دکمه‌های مودال (دیلی چک / زیرمجموعه / بونوس) ===== -->
+<div class="section">
+  <h2>📋 بخش‌ها</h2>
+
+  <!-- دیلی چک -->
+  <button class="modal-btn" onclick="openModal('daily')" style="margin-bottom:10px;">
+    <div class="left">
+      <span class="icon">🎁</span>
+      <span>دیلی چک</span>
+    </div>
+    <span class="badge" id="dailyBadge">روز ۱</span>
+  </button>
+
+  <!-- زیرمجموعه -->
+  <button class="modal-btn" onclick="openModal('referral')" style="margin-bottom:10px;">
+    <div class="left">
+      <span class="icon">👥</span>
+      <span>زیرمجموعه‌گیری</span>
+    </div>
+    <span class="badge" id="refBadge">۰ نفر</span>
+  </button>
+
+  <!-- بونوس -->
+  <button class="modal-btn" onclick="openModal('bonus')">
+    <div class="left">
+      <span class="icon">🎟️</span>
+      <span>بونوس</span>
+    </div>
+    <span class="badge">کد هدیه</span>
+  </button>
+</div>
+
+<footer>Wolf 🐺 — ساخته شده با ❤️</footer>
+
+<!-- ===== مودال دیلی چک ===== -->
+<div class="modal-bg" id="modal-daily">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>🎁 دیلی چک</h3>
+      <button class="modal-close" onclick="closeModal('daily')">✕</button>
+    </div>
+    <div class="daily-grid" id="dailyGrid"></div>
+    <button class="check-btn" id="checkBtn" onclick="dailyCheck()">دریافت جایزه امروز</button>
+  </div>
+</div>
+
+<!-- ===== مودال زیرمجموعه ===== -->
+<div class="modal-bg" id="modal-referral">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>👥 زیرمجموعه‌گیری</h3>
+      <button class="modal-close" onclick="closeModal('referral')">✕</button>
+    </div>
+    <div class="ref-card" id="refCard"></div>
+  </div>
+</div>
+
+<!-- ===== مودال بونوس ===== -->
+<div class="modal-bg" id="modal-bonus">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>🎟️ کد بونوس</h3>
+      <button class="modal-close" onclick="closeModal('bonus')">✕</button>
+    </div>
+    <div class="bonus-info">
+      🎁 هر کد = <b>۲۵ امتیاز</b> + <b>۱۰ توکن Wolf</b>
+    </div>
+    <div class="bonus-input-wrap">
+      <input type="text" class="bonus-input" id="bonusInput" placeholder="کد رو وارد کن" maxlength="5" autocomplete="off">
+      <button class="bonus-btn" id="bonusBtn" onclick="redeemBonus()">تأیید</button>
+    </div>
+    <div id="bonusStatus"></div>
+  </div>
+</div>
+
+<!-- ===== مودال نتیجه ===== -->
+<div class="modal-bg" id="modal-result">
+  <div class="modal result-modal">
+    <div class="emoji" id="rEmoji">🎉</div>
+    <h3 id="rTitle">نتیجه</h3>
+    <div class="res" id="rRes"></div>
+    <button onclick="closeModal('result')">باشه</button>
+  </div>
+</div>
+
+<!-- ===== توست ===== -->
+<div class="toast" id="toast"></div>
+
+<script src="codes.js"></script>
+<!-- تیکه ۲: JavaScript اینجا میاد -->
+</body>
+</html>
+<script>
+/* ============ ذخیره‌سازی ============ */
+const KEY = 'wolf_data_v1';
+
+function defaultData() {
+  return {
+    username: 'Wolf_' + Math.floor(1000 + Math.random() * 9000),
+    points: 0,
+    tokens: 0,
+    spins: 2,
+    lastSpinTime: Date.now(),
+    dailyStreak: 0,
+    lastDaily: null,
+    claimedDays: [],
+    refChoice: null,
+    refCount: 0,
+    refLocked: false,
+    usedBonusCodes: [],
+    refCodeUsed: null,
+    channelJoined: false
+  };
+}
+
+let data = load();
+function load() {
+  try {
+    const raw = localStorage.getItem(KEY);
+    if (!raw) return defaultData();
+    return Object.assign(defaultData(), JSON.parse(raw));
+  } catch { return defaultData(); }
+}
+function save() { localStorage.setItem(KEY, JSON.stringify(data)); }
+
+/* ============ تنظیمات ============ */
+const CONFIG = {
+  WEBHOOK_URL: '',  // ← اینجا لینک Railway خودت رو بذار (مثلاً https://wolf-webhook.up.railway.app)
+  BOT_USERNAME: 'Wolf_airdrops_bot',
+  CHANNEL_LINK: 'https://t.me/WOLFTOKN',  // ← اینجا لینک کانال واقعی رو بذار
+  REF_POINTS: 25,
+  REF_TOKENS: 15
+};
+
+/* ============ ابزار ============ */
+function today() { return new Date().toDateString(); }
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(t._to);
+  t._to = setTimeout(() => t.classList.remove('show'), 2500);
+}
+function openModal(name) {
+  document.getElementById('modal-' + name).classList.add('show');
+  document.body.style.overflow = 'hidden';
+  if (name === 'referral') renderRef();
+  if (name === 'daily') renderDaily();
+}
+function closeModal(name) {
+  document.getElementById('modal-' + name).classList.remove('show');
+  document.body.style.overflow = '';
+}
+function openResult(emoji, title, res, type='') {
+  document.getElementById('rEmoji').textContent = emoji;
+  document.getElementById('rTitle').textContent = title;
+  const r = document.getElementById('rRes');
+  r.textContent = res;
+  r.className = 'res ' + type;
+  openModal('result');
+}
+
+/* بستن مودال با کلیک روی پس‌زمینه */
+document.querySelectorAll('.modal-bg').forEach(bg => {
+  bg.addEventListener('click', e => {
+    if (e.target === bg) {
+      bg.classList.remove('show');
+      document.body.style.overflow = '';
+    }
+  });
+});
+
+/* ============ نمایش ============ */
+function render() {
+  document.getElementById('username').textContent = data.username;
+  document.getElementById('pointsVal').textContent = data.points;
+  document.getElementById('tokensVal').textContent = data.tokens;
+
+  // فرصت‌های چرخش — هر ۲۰ ساعت ۲ تا
+  const H20 = 20 * 60 * 60 * 1000;
+  if (Date.now() - data.lastSpinTime >= H20) {
+    data.spins = 2;
+    data.lastSpinTime = Date.now();
+    save();
+  }
+  document.getElementById('spinBadge').textContent = data.spins + ' فرصت';
+  document.getElementById('spinsInfo').innerHTML = `فرصت‌های باقی‌مانده: <b>${data.spins}</b>`;
+  document.getElementById('spinBtn').disabled = data.spins <= 0;
+
+  // بج‌ها
+  const dayNow = Math.min(data.claimedDays.length + 1, 7);
+  document.getElementById('dailyBadge').textContent = 'روز ' + dayNow;
+  document.getElementById('refBadge').textContent = (data.refCount || 0) + ' نفر';
+
+  renderDaily();
+  renderRef();
+}
+
+/* ============ گردونه ============ */
+const SECTORS = [
+  { label: 'پوچ',       type: 'empty',  value: 0,  color: '#3a3a4d' },
+  { label: '۱ امتیاز',  type: 'points', value: 1,  color: '#7c5cff' },
+  { label: '۵ امتیاز',  type: 'points', value: 5,  color: '#8c6cff' },
+  { label: '۱۵ امتیاز', type: 'points', value: 15, color: '#7c5cff' },
+  { label: '۲۵ امتیاز', type: 'points', value: 25, color: '#8c6cff' },
+  { label: '۵۰ امتیاز', type: 'points', value: 50, color: '#7c5cff' },
+  { label: '۷۵ امتیاز', type: 'points', value: 75, color: '#b48cff' },
+  { label: '۱ توکن',    type: 'token',  value: 1,  color: '#6d4cd4' },
+  { label: '۵ توکن',    type: 'token',  value: 5,  color: '#b48cff' },
+  { label: '۱۰ توکن',   type: 'token',  value: 10, color: '#6d4cd4' },
+  { label: '۲۰ توکن',   type: 'token',  value: 20, color: '#b48cff' },
+  { label: '۴۰ توکن',   type: 'token',  value: 40, color: '#9d6cff' }
+];
+
+const canvas = document.getElementById('wheel');
+const ctx = canvas.getContext('2d');
+let currentAngle = 0;
+let spinning = false;
+
+function drawWheel() {
+  const size = canvas.width;
+  const r = size / 2;
+  const n = SECTORS.length;
+  const arc = (Math.PI * 2) / n;
+  ctx.clearRect(0, 0, size, size);
+  const startOffset = -Math.PI / 2;
+  for (let i = 0; i < n; i++) {
+    const start = startOffset + i * arc;
+    const end = start + arc;
+    ctx.beginPath();
+    ctx.moveTo(r, r);
+    ctx.arc(r, r, r - 6, start, end);
+    ctx.closePath();
+    ctx.fillStyle = SECTORS[i].color;
+    ctx.fill();
+    ctx.strokeStyle = '#0a0a0f';
+    ctx.lineWidth = 3;
+    ctx.stroke();
+    ctx.save();
+    ctx.translate(r, r);
+    ctx.rotate(start + arc / 2);
+    ctx.textAlign = 'right';
+    ctx.fillStyle = '#fff';
+    ctx.font = 'bold 22px Tahoma';
+    ctx.fillText(SECTORS[i].label, r - 30, 8);
+    ctx.restore();
+  }
+}
+drawWheel();
+
+function spin() {
+  if (spinning) return;
+  if (data.spins <= 0) { toast('فرصتی نداری!'); return; }
+  spinning = true;
+  data.spins--;
+  save();
+  render();
+
+  const n = SECTORS.length;
+  const arcDeg = 360 / n;
+  const targetIndex = Math.floor(Math.random() * n);
+  const centerDeg = targetIndex * arcDeg + arcDeg / 2;
+  const neededRotation = -centerDeg;
+  const currentMod = ((currentAngle % 360) + 360) % 360;
+  const targetMod = ((neededRotation % 360) + 360) % 360;
+  let delta = targetMod - currentMod;
+  if (delta < 0) delta += 360;
+  currentAngle += 360 * 6 + delta;
+  canvas.style.transform = `rotate(${currentAngle}deg)`;
+
+  setTimeout(() => {
+    spinning = false;
+    const s = SECTORS[targetIndex];
+    if (s.type === 'empty') {
+      openResult('😢', 'پوچ!', 'این دفعه شانس یارت نبود', 'empty');
+    } else if (s.type === 'points') {
+      data.points += s.value;
+      openResult('⭐', 'بردی!', s.value + ' امتیاز', 'p');
+    } else {
+      data.tokens += s.value;
+      openResult('🐺', 'بردی!', s.value + ' توکن Wolf', 't');
+    }
+    save();
+    render();
+  }, 4600);
+}
+
+/* ============ دیلی چک ============ */
+const DAILY = [
+  { day: 1, type: 'points', value: 3 },
+  { day: 2, type: 'token',  value: 3 },
+  { day: 3, type: 'points', value: 5 },
+  { day: 4, type: 'token',  value: 5 },
+  { day: 5, type: 'points', value: 10 },
+  { day: 6, type: 'token',  value: 10 },
+  { day: 7, type: 'points', value: 20 }
+];
+
+function renderDaily() {
+  const grid = document.getElementById('dailyGrid');
+  grid.innerHTML = '';
+  const t = today();
+
+  // اگه یه روز نزده، ریست
+  if (data.lastDaily && data.lastDaily !== t) {
+    const last = new Date(data.lastDaily);
+    const now = new Date(t);
+    const diff = Math.floor((now - last) / (1000 * 60 * 60 * 24));
+    if (diff > 1) {
+      data.dailyStreak = 0;
+      data.claimedDays = [];
+      save();
+    }
+  }
+
+  DAILY.forEach(d => {
+    const div = document.createElement('div');
+    div.className = 'day';
+    const claimed = data.claimedDays.includes(d.day);
+    const isToday = !claimed && data.claimedDays.length === d.day - 1 && data.lastDaily !== today();
+    if (claimed) div.classList.add('claimed');
+    if (isToday) div.classList.add('today');
+    const sym = d.type === 'points' ? '⭐' : '🐺';
+    div.innerHTML = `<div class="num">روز ${d.day}</div><div class="rew">${sym} ${d.value}</div>`;
+    grid.appendChild(div);
+  });
+
+  const bonus = document.createElement('div');
+  bonus.className = 'day bonus';
+  bonus.innerHTML = `<div class="num">🎉 پاداش ۷ روز پیوسته</div><div class="rew">🐺 ۱۵ توکن Wolf</div>`;
+  grid.appendChild(bonus);
+
+  const btn = document.getElementById('checkBtn');
+  if (data.lastDaily === today()) {
+    btn.disabled = true;
+    btn.textContent = 'امروز گرفتی ✓';
+  } else if (data.claimedDays.length >= 7) {
+    btn.disabled = true;
+    btn.textContent = 'چرخه کامل شد ✓';
+  } else {
+    btn.disabled = false;
+    btn.textContent = 'دریافت جایزه امروز';
+  }
+}
+
+function dailyCheck() {
+  if (data.lastDaily === today()) { toast('امروز گرفتی!'); return; }
+  if (data.claimedDays.length >= 7) { toast('چرخه کامل شد!'); return; }
+
+  const day = data.claimedDays.length + 1;
+  const reward = DAILY[day - 1];
+  data.claimedDays.push(day);
+  data.lastDaily = today();
+  data.dailyStreak++;
+
+  let msg = '';
+  if (reward.type === 'points') { data.points += reward.value; msg = reward.value + ' امتیاز'; }
+  else { data.tokens += reward.value; msg = reward.value + ' توکن Wolf'; }
+
+  if (data.claimedDays.length === 7) {
+    data.tokens += 15;
+    msg += ' + 🎁 ۱۵ توکن پاداش!';
+  }
+
+  save();
+  render();
+  openResult('🎁', 'جایزه روز ' + day, msg, reward.type === 'points' ? 'p' : 't');
+}
+
+/* ============ زیرمجموعه ============ */
+function renderRef() {
+  const card = document.getElementById('refCard');
+
+  // اگه انتخاب نکرده → دو گزینه
+  if (!data.refLocked) {
+    card.innerHTML = `
+      <p>یه بار انتخاب کن که به ازای هر زیرمجموعه چی می‌خوای. <b>این انتخاب غیرقابل تغییره!</b></p>
+      <div class="ref-options">
+        <div class="ref-opt p" onclick="chooseRef('points')">
+          <div class="big">⭐ ${CONFIG.REF_POINTS}</div>
+          <div class="small">امتیاز برای هر زیرمجموعه</div>
+        </div>
+        <div class="ref-opt t" onclick="chooseRef('tokens')">
+          <div class="big">🐺 ${CONFIG.REF_TOKENS}</div>
+          <div class="small">توکن برای هر زیرمجموعه</div>
+        </div>
+      </div>
+    `;
+    return;
+  }
+
+  // بعد از انتخاب → لینک + لیست
+  const refLink = `https://t.me/${CONFIG.BOT_USERNAME}?start=ref_${data.username}`;
+  const choiceLabel = data.refChoice === 'points'
+    ? `${CONFIG.REF_POINTS} امتیاز`
+    : `${CONFIG.REF_TOKENS} توکن Wolf`;
+  const totalReward = data.refCount * (data.refChoice === 'points' ? CONFIG.REF_POINTS : CONFIG.REF_TOKENS);
+
+  let listHtml = '';
+  if (data.refList && data.refList.length > 0) {
+    listHtml = data.refList.map(r => `
+      <div class="ref-list-item">
+        <span class="name">🐺 ${r.id}</span>
+        <span class="date">${r.date || ''}</span>
+      </div>
+    `).join('');
+  } else {
+    listHtml = '<div class="ref-empty">هنوز زیرمجموعه‌ای نداری</div>';
+  }
+
+  card.innerHTML = `
+    <div class="ref-locked">
+      <div class="big">✅</div>
+      <div class="info">انتخاب شما: <b>${choiceLabel}</b> به ازای هر زیرمجموعه</div>
+    </div>
+
+    <div class="ref-link-box">
+      <span id="refLinkText">${refLink}</span>
+      <button onclick="copyRefLink()">📋 کپی</button>
+    </div>
+
+    <div class="ref-stats">
+      <div class="ref-stat">
+        <div class="num">${data.refCount || 0}</div>
+        <div class="lbl">تعداد زیرمجموعه</div>
+      </div>
+      <div class="ref-stat">
+        <div class="num">${totalReward}</div>
+        <div class="lbl">پاداش کل</div>
+      </div>
+    </div>
+
+    <div style="font-size:13px;color:var(--muted);margin-bottom:8px;">📋 لیست زیرمجموعه‌ها:</div>
+    <div class="ref-list">${listHtml}</div>
+  `;
+}
+
+function chooseRef(type) {
+  const label = type === 'points' ? `${CONFIG.REF_POINTS} امتیاز` : `${CONFIG.REF_TOKENS} توکن Wolf`;
+  if (!confirm(`مطمئنی؟ انتخاب: ${label} به ازای هر زیرمجموعه — دیگه قابل تغییر نیست!`)) return;
+  data.refChoice = type;
+  data.refLocked = true;
+  save();
+  renderRef();
+  render();
+  toast('انتخاب ثبت شد ✅');
+}
+
+function copyRefLink() {
+  const link = `https://t.me/${CONFIG.BOT_USERNAME}?start=ref_${data.username}`;
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(link).then(() => toast('لینک کپی شد ✅'));
+  } else {
+    const ta = document.createElement('textarea');
+    ta.value = link;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    toast('لینک کپی شد ✅');
+  }
+}
+
+/* ============ بونوس ============ */
+function redeemBonus() {
+  const input = document.getElementById('bonusInput');
+  const status = document.getElementById('bonusStatus');
+  const code = input.value.trim().toUpperCase();
+
+  if (!code) {
+    status.className = 'bonus-status error';
+    status.textContent = '❌ کد رو وارد کن';
+    return;
+  }
+
+  if (code.length !== 5) {
+    status.className = 'bonus-status error';
+    status.textContent = '❌ کد باید ۵ کاراکتر باشه';
+    return;
+  }
+
+  // چک کن کاربر قبلاً این کد رو استفاده کرده
+  if (data.usedBonusCodes && data.usedBonusCodes.includes(code)) {
+    status.className = 'bonus-status error';
+    status.textContent = '❌ این کد رو قبلاً استفاده کردی';
+    return;
+  }
+
+  // چک کن کد معتبره
+  if (!window.BONUS_CODES || !window.BONUS_CODES.includes(code)) {
+    status.className = 'bonus-status error';
+    status.textContent = '❌ کد نامعتبره';
+    return;
+  }
+
+  // کد معتبر → جایزه بده
+  data.points += 25;
+  data.tokens += 10;
+  if (!data.usedBonusCodes) data.usedBonusCodes = [];
+  data.usedBonusCodes.push(code);
+  save();
+  render();
+
+  status.className = 'bonus-status success';
+  status.textContent = `✅ کد تأیید شد! ۲۵ امتیاز + ۱۰ توکن اضافه شد 🎉`;
+  input.value = '';
+  input.disabled = true;
+  document.getElementById('bonusBtn').disabled = true;
+
+  setTimeout(() => {
+    input.disabled = false;
+    document.getElementById('bonusBtn').disabled = false;
+    status.textContent = '';
+    status.className = '';
+  }, 3000);
+}
+
+/* ============ کانال ============ */
+function joinChannel() {
+  window.open(CONFIG.CHANNEL_LINK, '_blank');
+  data.channelJoined = true;
+  save();
+  const btn = document.getElementById('channelJoinBtn');
+  if (btn) {
+    btn.textContent = '✅ عضو شدم';
+    btn.classList.add('joined');
+    btn.onclick = null;
+  }
+  toast('عضویت در کانال ثبت شد ✅');
+}
+
+/* ============ چک کد رفرال از URL (فقط بار اول) ============ */
+(function checkRefCode() {
+  const params = new URLSearchParams(window.location.search);
+  const ref = params.get('ref') || params.get('start');
+
+  // اگه بار اوله و کد رفرال داره
+  if (ref && !data.refCodeUsed && !data.registered) {
+    data.refCodeUsed = ref.replace('ref_', '');
+    save();
+
+    // ثبت توی وب‌هوک (اگه لینک داری)
+    if (CONFIG.WEBHOOK_URL) {
+      fetch(CONFIG.WEBHOOK_URL + '/api/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId: data.username,
+          refCode: data.refCodeUsed,
+          timestamp: new Date().toISOString()
+        })
+      }).catch(e => console.log('Webhook error:', e));
+    }
+  }
+})();
+
+/* ============ شروع ============ */
+render();
+setTimeout(() => {
+  document.getElementById('splash').classList.add('hide');
+}, 2500);
+
+/* ============ سینک زیرمجموعه‌ها با وب‌هوک (اگه لینک داری) ============ */
+async function syncReferrals() {
+  if (!CONFIG.WEBHOOK_URL) return;
+  try {
+    const res = await fetch(`${CONFIG.WEBHOOK_URL}/api/referrals/${data.username}`);
+    const json = await res.json();
+    if (json.success && json.referrals) {
+      const serverCount = json.referrals.length;
+      const localCount = data.refCount || 0;
+      if (serverCount > localCount) {
+        const newRefs = serverCount - localCount;
+        // پاداش به ازای هر زیرمجموعه جدید
+        if (data.refChoice === 'points') {
+          data.points += newRefs * CONFIG.REF_POINTS;
+        } else if (data.refChoice === 'tokens') {
+          data.tokens += newRefs * CONFIG.REF_TOKENS;
+        }
+        data.refCount = serverCount;
+        // لیست رو ذخیره کن (اگه خواستی)
+        if (!data.refList) data.refList = [];
+        json.referrals.forEach(id => {
+          if (!data.refList.find(r => r.id === id)) {
+            data.refList.push({ id, date: '' });
+          }
+        });
+        save();
+        render();
+        toast(`🎉 ${newRefs} زیرمجموعه جدید! پاداش اضافه شد`);
+      }
+    }
+  } catch (e) {
+    console.log('Sync error:', e);
+  }
+}
+
+// هر ۳۰ ثانیه یه بار سینک کن (اگه لینک وب‌هوک داری)
+if (CONFIG.WEBHOOK_URL) {
+  setInterval(syncReferrals, 30000);
+  setTimeout(syncReferrals, 3000);
+}
+</script>
+</body>
+</html>
