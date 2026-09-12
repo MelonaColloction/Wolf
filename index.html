@@ -40,20 +40,18 @@
   }
   #splash.hide { opacity: 0; visibility: hidden; }
   .splash-wolf {
-    width: 220px;
-    height: auto;
-    max-height: 55vh;
-    object-fit: contain;
-    border-radius: 18px;
+    width: 240px;
+    height: 240px;
     filter: drop-shadow(0 0 30px rgba(124, 92, 255, 0.7));
     animation: wolfPulse 2s ease-in-out infinite;
   }
+  .splash-wolf svg { width: 100%; height: 100%; display: block; }
   @keyframes wolfPulse {
-    0%, 100% { transform: scale(1); filter: drop-shadow(0 0 20px rgba(124,92,255,0.6)); }
-    50% { transform: scale(1.05); filter: drop-shadow(0 0 45px rgba(180,140,255,0.95)); }
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
   }
   #splash h1 {
-    margin-top: 24px;
+    margin-top: 20px;
     font-size: 42px;
     letter-spacing: 8px;
     background: linear-gradient(90deg, #7c5cff, #b48cff, #7c5cff);
@@ -101,7 +99,15 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
   }
-  header .logo .logo-icon { font-size: 26px; -webkit-text-fill-color: initial; }
+  header .logo .logo-icon {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    filter: drop-shadow(0 0 8px rgba(124,92,255,0.5));
+  }
+  header .logo .logo-icon svg { width: 100%; height: 100%; display: block; }
   header .user {
     display: flex; align-items: center; gap: 8px;
     background: var(--card);
@@ -194,15 +200,16 @@
     position: absolute;
     top: 50%; left: 50%;
     transform: translate(-50%,-50%);
-    width: 70px; height: 70px;
+    width: 80px; height: 80px;
     border-radius: 50%;
     background: radial-gradient(circle, #2a2a3d, #15151f);
     border: 3px solid var(--accent);
     display: flex; align-items: center; justify-content: center;
-    font-size: 28px;
+    padding: 8px;
     z-index: 5;
     box-shadow: 0 0 20px rgba(124,92,255,0.6);
   }
+  .wheel-center svg { width: 100%; height: 100%; display: block; }
   .spin-btn {
     margin-top: 22px;
     padding: 14px 40px;
@@ -357,7 +364,6 @@
   .ref-locked .big { font-size: 40px; margin-bottom: 10px; }
   .ref-locked .info { font-size: 15px; margin-bottom: 6px; }
   .ref-locked .info b { color: var(--accent2); }
-  .ref-locked .note { font-size: 12px; color: var(--muted); margin-top: 8px; }
 
   .ref-link-box {
     background: rgba(255,255,255,0.03);
@@ -567,6 +573,7 @@
   @media (max-width: 420px) {
     .wheel-container { width: 260px; height: 260px; }
     .wallet .value { font-size: 22px; }
+    .splash-wolf { width: 200px; height: 200px; }
   }
 </style>
 </head>
@@ -574,7 +581,7 @@
 
 <!-- ===== Splash ===== -->
 <div id="splash">
-  <img src="wolf.png" alt="Wolf" class="splash-wolf">
+  <div class="splash-wolf wolf-slot"></div>
   <h1>WOLF</h1>
   <div class="loader"></div>
 </div>
@@ -582,7 +589,7 @@
 <!-- ===== Header ===== -->
 <header>
   <div class="logo">
-    <span class="logo-icon">🐺</span>
+    <div class="logo-icon wolf-slot"></div>
     WOLF
   </div>
   <div class="user">
@@ -605,18 +612,16 @@
   </div>
 </div>
 
-<!-- ===== Onboarding: Channel + Referral Code (first time only) ===== -->
+<!-- ===== Onboarding ===== -->
 <div class="section" id="onboardingSection" style="display:none;">
   <h2>🎯 Get Started</h2>
 
-  <!-- Join Channel -->
   <div class="channel-box" id="channelBox">
     <div class="title">📢 Channel Membership Required</div>
     <div class="desc">You must join our Telegram channel to use the site</div>
     <button class="btn" id="channelJoinBtn" onclick="joinChannel()">📢 Join Channel</button>
   </div>
 
-  <!-- Referral Code -->
   <div class="channel-box" id="refCodeBox" style="display:none; background: linear-gradient(145deg, #2a1f3a, #1a1525); border-color: var(--accent);">
     <div class="title" style="color: var(--accent2);">🔗 Referral Code</div>
     <div class="desc">Enter a referral code if you have one, or skip</div>
@@ -628,24 +633,22 @@
   </div>
 </div>
 
-<!-- ===== Main Content (hidden until onboarding done) ===== -->
+<!-- ===== Main Content ===== -->
 <div id="mainContent" style="display:none;">
 
-  <!-- ===== Wheel ===== -->
   <div class="section">
     <h2>🎡 Lucky Wheel <span class="badge" id="spinBadge">2 spins</span></h2>
     <div class="wheel-wrap">
       <div class="wheel-container">
         <div class="pointer"></div>
         <canvas id="wheel" width="600" height="600"></canvas>
-        <div class="wheel-center">🐺</div>
+        <div class="wheel-center wolf-slot"></div>
       </div>
       <button class="spin-btn" id="spinBtn" onclick="spin()">Spin!</button>
       <div class="spins-info" id="spinsInfo">Spins remaining: <b>2</b></div>
     </div>
   </div>
 
-  <!-- ===== Modal Buttons ===== -->
   <div class="section">
     <h2>📋 Sections</h2>
 
@@ -674,7 +677,7 @@
     </button>
   </div>
 
-</div> <!-- End mainContent -->
+</div>
 
 <footer>Wolf 🐺 — Made with ❤️</footer>
 
@@ -733,6 +736,7 @@
 <div class="toast" id="toast"></div>
 
 <script src="codes.js"></script>
+<script src="wolf-icon.js"></script>
 <!-- Part 2: JavaScript goes here -->
 </body>
 </html>
@@ -909,7 +913,7 @@ function render() {
   document.getElementById('spinBadge').textContent = data.spins + ' spins';
   document.getElementById('spinsInfo').innerHTML = `Spins remaining: <b>${data.spins}</b>`;
 
-  // Wheel only depends on onboardingDone and spins — not on daily check
+  // Wheel only depends on onboardingDone and spins
   document.getElementById('spinBtn').disabled = (data.spins <= 0) || !data.onboardingDone;
 
   const dayNow = Math.min(data.claimedDays.length + 1, 7);
@@ -1026,7 +1030,6 @@ function renderDaily() {
   grid.innerHTML = '';
   const t = today();
 
-  // Reset if a day was missed
   if (data.lastDaily && data.lastDaily !== t) {
     const last = new Date(data.lastDaily);
     const now = new Date(t);
@@ -1281,4 +1284,4 @@ if (CONFIG.WEBHOOK_URL) {
 }
 </script>
 </body>
- </html>
+   </html>
