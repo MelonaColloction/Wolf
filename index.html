@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fa" dir="rtl">
+<html lang="en" dir="ltr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -26,7 +26,7 @@
     overflow-x: hidden;
   }
 
-  /* ===== صفحه ورود ===== */
+  /* ===== Splash ===== */
   #splash {
     position: fixed;
     inset: 0;
@@ -81,7 +81,7 @@
   }
   @keyframes load { to { width: 100%; } }
 
-  /* ===== هدر ===== */
+  /* ===== Header ===== */
   header {
     padding: 16px 20px;
     display: flex;
@@ -112,7 +112,7 @@
   }
   header .user .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); box-shadow: 0 0 10px var(--green); }
 
-  /* ===== کارت‌های ارز ===== */
+  /* ===== Wallets ===== */
   .wallets {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -140,9 +140,9 @@
   .wallet .value { font-size: 26px; font-weight: bold; position: relative; }
   .wallet.points .value { color: var(--gold); }
   .wallet.tokens .value { color: var(--accent2); }
-  .wallet .icon { position: absolute; top: 14px; left: 14px; font-size: 22px; opacity: 0.4; }
+  .wallet .icon { position: absolute; top: 14px; right: 14px; font-size: 22px; opacity: 0.4; }
 
-  /* ===== بخش‌ها ===== */
+  /* ===== Sections ===== */
   .section {
     max-width: 600px;
     margin: 0 auto 24px;
@@ -162,7 +162,7 @@
     font-weight: normal;
   }
 
-  /* ===== گردونه ===== */
+  /* ===== Wheel ===== */
   .wheel-wrap {
     background: var(--card);
     border: 1px solid var(--border);
@@ -221,7 +221,7 @@
   .spins-info { margin-top: 12px; font-size: 13px; color: var(--muted); }
   .spins-info b { color: var(--accent2); }
 
-  /* ===== دکمه باز کردن مودال ===== */
+  /* ===== Modal buttons ===== */
   .modal-btn {
     width: 100%;
     padding: 18px 20px;
@@ -248,7 +248,7 @@
     border-radius: 20px;
   }
 
-  /* ===== مودال ===== */
+  /* ===== Modal ===== */
   .modal-bg {
     position: fixed; inset: 0;
     background: rgba(0,0,0,0.75);
@@ -293,7 +293,7 @@
   }
   .modal-close:hover { background: rgba(255,255,255,0.1); color: white; }
 
-  /* ===== دیلی چک ===== */
+  /* ===== Daily Check ===== */
   .daily-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -314,7 +314,7 @@
   .day .rew { font-size: 13px; font-weight: bold; }
   .day.claimed { background: linear-gradient(145deg, #1f3a2a, #15251c); border-color: var(--green); }
   .day.claimed .rew { color: var(--green); }
-  .day.claimed::after { content: '✓'; position: absolute; top: 4px; left: 6px; color: var(--green); font-size: 12px; }
+  .day.claimed::after { content: '✓'; position: absolute; top: 4px; right: 6px; color: var(--green); font-size: 12px; }
   .day.today { border-color: var(--accent); box-shadow: 0 0 14px rgba(124,92,255,0.4); }
   .day.bonus { grid-column: span 4; background: linear-gradient(145deg, #2a1f3a, #1a1525); }
   .day.bonus .rew { color: var(--accent2); }
@@ -334,7 +334,7 @@
   .check-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(74,222,128,0.5); }
   .check-btn:disabled { opacity: 0.5; cursor: not-allowed; background: #2a2a3d; }
 
-  /* ===== زیرمجموعه ===== */
+  /* ===== Referral ===== */
   .ref-card { background: transparent; }
   .ref-card p { font-size: 14px; color: var(--muted); margin-bottom: 18px; line-height: 1.7; }
   .ref-options { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
@@ -375,7 +375,6 @@
     font-size: 12px;
     word-break: break-all;
     flex: 1;
-    direction: ltr;
     text-align: left;
   }
   .ref-link-box button {
@@ -408,11 +407,7 @@
   .ref-stat .num { font-size: 22px; font-weight: bold; color: var(--accent2); }
   .ref-stat .lbl { font-size: 11px; color: var(--muted); margin-top: 4px; }
 
-  .ref-list {
-    max-height: 200px;
-    overflow-y: auto;
-    margin-top: 10px;
-  }
+  .ref-list { max-height: 200px; overflow-y: auto; margin-top: 10px; }
   .ref-list-item {
     background: rgba(255,255,255,0.03);
     border: 1px solid var(--border);
@@ -428,7 +423,7 @@
   .ref-list-item .date { color: var(--muted); font-size: 11px; }
   .ref-empty { text-align: center; padding: 20px; color: var(--muted); font-size: 13px; }
 
-  /* ===== بونوس ===== */
+  /* ===== Bonus ===== */
   .bonus-info {
     background: linear-gradient(145deg, #2a1f3a, #1a1525);
     border: 1px solid var(--accent);
@@ -439,11 +434,7 @@
     font-size: 13px;
   }
   .bonus-info b { color: var(--gold); }
-  .bonus-input-wrap {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 12px;
-  }
+  .bonus-input-wrap { display: flex; gap: 8px; margin-bottom: 12px; }
   .bonus-input {
     flex: 1;
     padding: 14px 16px;
@@ -458,6 +449,7 @@
     font-weight: bold;
     outline: none;
     transition: 0.2s;
+    min-width: 0;
   }
   .bonus-input:focus { border-color: var(--accent); }
   .bonus-input::placeholder { letter-spacing: normal; font-weight: normal; color: var(--muted); }
@@ -485,7 +477,7 @@
   .bonus-status.success { background: rgba(74,222,128,0.1); color: var(--green); border: 1px solid var(--green); }
   .bonus-status.error { background: rgba(239,68,68,0.1); color: var(--red); border: 1px solid var(--red); }
 
-  /* ===== مودال نتیجه ===== */
+  /* ===== Result Modal ===== */
   .result-modal { text-align: center; }
   .result-modal .emoji { font-size: 54px; margin-bottom: 12px; }
   .result-modal h3 { font-size: 20px; margin-bottom: 8px; }
@@ -505,17 +497,17 @@
     cursor: pointer;
   }
 
-  /* ===== کانال ===== */
+  /* ===== Channel / Onboarding ===== */
   .channel-box {
     background: linear-gradient(145deg, #1a2540, #0f1525);
     border: 1px solid #2a4080;
     border-radius: 16px;
-    padding: 16px;
+    padding: 18px;
     text-align: center;
-    margin-bottom: 16px;
+    margin-bottom: 14px;
   }
   .channel-box .title { font-size: 15px; font-weight: bold; margin-bottom: 6px; color: #7ab8ff; }
-  .channel-box .desc { font-size: 12px; color: var(--muted); margin-bottom: 12px; }
+  .channel-box .desc { font-size: 12px; color: var(--muted); margin-bottom: 14px; line-height: 1.6; }
   .channel-box .btn {
     display: inline-block;
     padding: 12px 28px;
@@ -528,13 +520,30 @@
     transition: 0.2s;
     border: none;
     cursor: pointer;
+    width: 100%;
   }
   .channel-box .btn:hover { transform: translateY(-2px); }
-  .channel-box .joined {
+  .channel-box .btn.joined {
     background: linear-gradient(90deg, #22c55e, #4ade80);
+    cursor: default;
   }
+  .ref-code-btns { display: flex; gap: 8px; margin-top: 10px; }
+  .ref-code-btns button {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
+    color: white;
+  }
+  .ref-code-btns .submit { background: linear-gradient(90deg, #7c5cff, #b48cff); }
+  .ref-code-btns .skip { background: #2a2a3d; color: var(--muted); }
+  .ref-code-btns button:hover { transform: translateY(-2px); }
 
-  /* ===== توست ===== */
+  /* ===== Toast ===== */
   .toast {
     position: fixed;
     bottom: 24px; left: 50%;
@@ -563,14 +572,14 @@
 </head>
 <body>
 
-<!-- ===== صفحه ورود ===== -->
+<!-- ===== Splash ===== -->
 <div id="splash">
   <img src="wolf.png" alt="Wolf" class="splash-wolf">
   <h1>WOLF</h1>
   <div class="loader"></div>
 </div>
 
-<!-- ===== هدر ===== -->
+<!-- ===== Header ===== -->
 <header>
   <div class="logo">
     <span class="logo-icon">🐺</span>
@@ -582,128 +591,153 @@
   </div>
 </header>
 
-<!-- ===== کیف پول ===== -->
+<!-- ===== Wallets ===== -->
 <div class="wallets">
   <div class="wallet points">
     <span class="icon">⭐</span>
-    <div class="label">امتیاز</div>
+    <div class="label">Points</div>
     <div class="value" id="pointsVal">0</div>
   </div>
   <div class="wallet tokens">
     <span class="icon">🐺</span>
-    <div class="label">توکن Wolf</div>
+    <div class="label">Wolf Tokens</div>
     <div class="value" id="tokensVal">0</div>
   </div>
 </div>
 
-<!-- ===== گردونه (توی صفحه اصلی) ===== -->
-<div class="section">
-  <h2>🎡 گردونه شانس <span class="badge" id="spinBadge">۲ فرصت</span></h2>
-  <div class="wheel-wrap">
-    <div class="wheel-container">
-      <div class="pointer"></div>
-      <canvas id="wheel" width="600" height="600"></canvas>
-      <div class="wheel-center">🐺</div>
+<!-- ===== Onboarding: Channel + Referral Code (first time only) ===== -->
+<div class="section" id="onboardingSection" style="display:none;">
+  <h2>🎯 Get Started</h2>
+
+  <!-- Join Channel -->
+  <div class="channel-box" id="channelBox">
+    <div class="title">📢 Channel Membership Required</div>
+    <div class="desc">You must join our Telegram channel to use the site</div>
+    <button class="btn" id="channelJoinBtn" onclick="joinChannel()">📢 Join Channel</button>
+  </div>
+
+  <!-- Referral Code -->
+  <div class="channel-box" id="refCodeBox" style="display:none; background: linear-gradient(145deg, #2a1f3a, #1a1525); border-color: var(--accent);">
+    <div class="title" style="color: var(--accent2);">🔗 Referral Code</div>
+    <div class="desc">Enter a referral code if you have one, or skip</div>
+    <input type="text" id="refCodeInput" class="bonus-input" placeholder="Enter code" style="margin-bottom:0; letter-spacing: normal; text-transform: none;">
+    <div class="ref-code-btns">
+      <button class="submit" onclick="submitRefCode()">✅ Submit Code</button>
+      <button class="skip" onclick="skipRefCode()">⏭️ Skip</button>
     </div>
-    <button class="spin-btn" id="spinBtn" onclick="spin()">بچرخون!</button>
-    <div class="spins-info" id="spinsInfo">فرصت‌های باقی‌مانده: <b>۲</b></div>
   </div>
 </div>
 
-<!-- ===== دکمه‌های مودال (دیلی چک / زیرمجموعه / بونوس) ===== -->
-<div class="section">
-  <h2>📋 بخش‌ها</h2>
+<!-- ===== Main Content (hidden until onboarding done) ===== -->
+<div id="mainContent" style="display:none;">
 
-  <!-- دیلی چک -->
-  <button class="modal-btn" onclick="openModal('daily')" style="margin-bottom:10px;">
-    <div class="left">
-      <span class="icon">🎁</span>
-      <span>دیلی چک</span>
+  <!-- ===== Wheel ===== -->
+  <div class="section">
+    <h2>🎡 Lucky Wheel <span class="badge" id="spinBadge">2 spins</span></h2>
+    <div class="wheel-wrap">
+      <div class="wheel-container">
+        <div class="pointer"></div>
+        <canvas id="wheel" width="600" height="600"></canvas>
+        <div class="wheel-center">🐺</div>
+      </div>
+      <button class="spin-btn" id="spinBtn" onclick="spin()">Spin!</button>
+      <div class="spins-info" id="spinsInfo">Spins remaining: <b>2</b></div>
     </div>
-    <span class="badge" id="dailyBadge">روز ۱</span>
-  </button>
+  </div>
 
-  <!-- زیرمجموعه -->
-  <button class="modal-btn" onclick="openModal('referral')" style="margin-bottom:10px;">
-    <div class="left">
-      <span class="icon">👥</span>
-      <span>زیرمجموعه‌گیری</span>
-    </div>
-    <span class="badge" id="refBadge">۰ نفر</span>
-  </button>
+  <!-- ===== Modal Buttons ===== -->
+  <div class="section">
+    <h2>📋 Sections</h2>
 
-  <!-- بونوس -->
-  <button class="modal-btn" onclick="openModal('bonus')">
-    <div class="left">
-      <span class="icon">🎟️</span>
-      <span>بونوس</span>
-    </div>
-    <span class="badge">کد هدیه</span>
-  </button>
-</div>
+    <button class="modal-btn" onclick="openModal('daily')" style="margin-bottom:10px;">
+      <div class="left">
+        <span class="icon">🎁</span>
+        <span>Daily Check</span>
+      </div>
+      <span class="badge" id="dailyBadge">Day 1</span>
+    </button>
 
-<footer>Wolf 🐺 — ساخته شده با ❤️</footer>
+    <button class="modal-btn" onclick="openModal('referral')" style="margin-bottom:10px;">
+      <div class="left">
+        <span class="icon">👥</span>
+        <span>Referral</span>
+      </div>
+      <span class="badge" id="refBadge">0 users</span>
+    </button>
 
-<!-- ===== مودال دیلی چک ===== -->
+    <button class="modal-btn" onclick="openModal('bonus')">
+      <div class="left">
+        <span class="icon">🎟️</span>
+        <span>Bonus</span>
+      </div>
+      <span class="badge">Gift Code</span>
+    </button>
+  </div>
+
+</div> <!-- End mainContent -->
+
+<footer>Wolf 🐺 — Made with ❤️</footer>
+
+<!-- ===== Daily Check Modal ===== -->
 <div class="modal-bg" id="modal-daily">
   <div class="modal">
     <div class="modal-header">
-      <h3>🎁 دیلی چک</h3>
+      <h3>🎁 Daily Check</h3>
       <button class="modal-close" onclick="closeModal('daily')">✕</button>
     </div>
     <div class="daily-grid" id="dailyGrid"></div>
-    <button class="check-btn" id="checkBtn" onclick="dailyCheck()">دریافت جایزه امروز</button>
+    <button class="check-btn" id="checkBtn" onclick="dailyCheck()">Claim Today's Reward</button>
   </div>
 </div>
 
-<!-- ===== مودال زیرمجموعه ===== -->
+<!-- ===== Referral Modal ===== -->
 <div class="modal-bg" id="modal-referral">
   <div class="modal">
     <div class="modal-header">
-      <h3>👥 زیرمجموعه‌گیری</h3>
+      <h3>👥 Referral</h3>
       <button class="modal-close" onclick="closeModal('referral')">✕</button>
     </div>
     <div class="ref-card" id="refCard"></div>
   </div>
 </div>
 
-<!-- ===== مودال بونوس ===== -->
+<!-- ===== Bonus Modal ===== -->
 <div class="modal-bg" id="modal-bonus">
   <div class="modal">
     <div class="modal-header">
-      <h3>🎟️ کد بونوس</h3>
+      <h3>🎟️ Bonus Code</h3>
       <button class="modal-close" onclick="closeModal('bonus')">✕</button>
     </div>
     <div class="bonus-info">
-      🎁 هر کد = <b>۲۵ امتیاز</b> + <b>۱۰ توکن Wolf</b>
+      🎁 Each code = <b>25 Points</b> + <b>10 Wolf Tokens</b>
     </div>
     <div class="bonus-input-wrap">
-      <input type="text" class="bonus-input" id="bonusInput" placeholder="کد رو وارد کن" maxlength="5" autocomplete="off">
-      <button class="bonus-btn" id="bonusBtn" onclick="redeemBonus()">تأیید</button>
+      <input type="text" class="bonus-input" id="bonusInput" placeholder="Enter code" maxlength="5" autocomplete="off">
+      <button class="bonus-btn" id="bonusBtn" onclick="redeemBonus()">Submit</button>
     </div>
     <div id="bonusStatus"></div>
   </div>
 </div>
 
-<!-- ===== مودال نتیجه ===== -->
+<!-- ===== Result Modal ===== -->
 <div class="modal-bg" id="modal-result">
   <div class="modal result-modal">
     <div class="emoji" id="rEmoji">🎉</div>
-    <h3 id="rTitle">نتیجه</h3>
+    <h3 id="rTitle">Result</h3>
     <div class="res" id="rRes"></div>
-    <button onclick="closeModal('result')">باشه</button>
+    <button onclick="closeModal('result')">OK</button>
   </div>
 </div>
 
-<!-- ===== توست ===== -->
+<!-- ===== Toast ===== -->
 <div class="toast" id="toast"></div>
 
 <script src="codes.js"></script>
-<!-- تیکه ۲: JavaScript اینجا میاد -->
+<!-- Part 2: JavaScript goes here -->
 </body>
 </html>
 <script>
-/* ============ ذخیره‌سازی ============ */
+/* ============ Storage ============ */
 const KEY = 'wolf_data_v1';
 
 function defaultData() {
@@ -719,9 +753,11 @@ function defaultData() {
     refChoice: null,
     refCount: 0,
     refLocked: false,
+    refList: [],
     usedBonusCodes: [],
     refCodeUsed: null,
-    channelJoined: false
+    channelJoined: false,
+    onboardingDone: false
   };
 }
 
@@ -735,16 +771,16 @@ function load() {
 }
 function save() { localStorage.setItem(KEY, JSON.stringify(data)); }
 
-/* ============ تنظیمات ============ */
+/* ============ Config ============ */
 const CONFIG = {
-  WEBHOOK_URL: '',  // ← اینجا لینک Railway خودت رو بذار (مثلاً https://wolf-webhook.up.railway.app)
+  WEBHOOK_URL: '',  // ← put your Railway URL here
   BOT_USERNAME: 'Wolf_airdrops_bot',
-  CHANNEL_LINK: 'https://t.me/WOLFTOKN',  // ← اینجا لینک کانال واقعی رو بذار
+  CHANNEL_LINK: 'https://t.me/WOLFTOKN',  // ← put your real channel link here
   REF_POINTS: 25,
   REF_TOKENS: 15
 };
 
-/* ============ ابزار ============ */
+/* ============ Utils ============ */
 function today() { return new Date().toDateString(); }
 function toast(msg) {
   const t = document.getElementById('toast');
@@ -754,6 +790,7 @@ function toast(msg) {
   t._to = setTimeout(() => t.classList.remove('show'), 2500);
 }
 function openModal(name) {
+  if (!data.onboardingDone) { toast('Please complete setup first'); return; }
   document.getElementById('modal-' + name).classList.add('show');
   document.body.style.overflow = 'hidden';
   if (name === 'referral') renderRef();
@@ -769,10 +806,11 @@ function openResult(emoji, title, res, type='') {
   const r = document.getElementById('rRes');
   r.textContent = res;
   r.className = 'res ' + type;
-  openModal('result');
+  document.getElementById('modal-result').classList.add('show');
+  document.body.style.overflow = 'hidden';
 }
 
-/* بستن مودال با کلیک روی پس‌زمینه */
+/* Close modal when clicking background */
 document.querySelectorAll('.modal-bg').forEach(bg => {
   bg.addEventListener('click', e => {
     if (e.target === bg) {
@@ -782,46 +820,120 @@ document.querySelectorAll('.modal-bg').forEach(bg => {
   });
 });
 
-/* ============ نمایش ============ */
+/* ============ Onboarding ============ */
+function checkOnboarding() {
+  const onboarding = document.getElementById('onboardingSection');
+  const main = document.getElementById('mainContent');
+
+  if (data.onboardingDone) {
+    onboarding.style.display = 'none';
+    main.style.display = 'block';
+    return;
+  }
+
+  onboarding.style.display = 'block';
+  main.style.display = 'none';
+
+  if (data.channelJoined) {
+    document.getElementById('channelBox').style.display = 'none';
+    document.getElementById('refCodeBox').style.display = 'block';
+  } else {
+    document.getElementById('channelBox').style.display = 'block';
+    document.getElementById('refCodeBox').style.display = 'none';
+  }
+}
+
+function joinChannel() {
+  window.open(CONFIG.CHANNEL_LINK, '_blank');
+  setTimeout(() => {
+    data.channelJoined = true;
+    save();
+    const btn = document.getElementById('channelJoinBtn');
+    btn.textContent = '✅ Joined';
+    btn.classList.add('joined');
+    btn.onclick = null;
+    checkOnboarding();
+    toast('✅ Membership recorded, now enter your referral code');
+  }, 1200);
+}
+
+function submitRefCode() {
+  const input = document.getElementById('refCodeInput');
+  const code = input.value.trim();
+
+  if (!code) { toast('❌ Enter a code or skip'); return; }
+
+  data.refCodeUsed = code;
+  data.onboardingDone = true;
+  save();
+
+  if (CONFIG.WEBHOOK_URL) {
+    fetch(CONFIG.WEBHOOK_URL + '/api/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        userId: data.username,
+        refCode: code,
+        timestamp: new Date().toISOString()
+      })
+    }).catch(e => console.log('Webhook error:', e));
+  }
+
+  checkOnboarding();
+  render();
+  toast('✅ Code saved! All sections unlocked');
+}
+
+function skipRefCode() {
+  data.onboardingDone = true;
+  data.refCodeUsed = null;
+  save();
+  checkOnboarding();
+  render();
+  toast('Welcome 🐺 All sections unlocked');
+}
+
+/* ============ Render ============ */
 function render() {
   document.getElementById('username').textContent = data.username;
   document.getElementById('pointsVal').textContent = data.points;
   document.getElementById('tokensVal').textContent = data.tokens;
 
-  // فرصت‌های چرخش — هر ۲۰ ساعت ۲ تا
+  // Refill spin chances every 20 hours
   const H20 = 20 * 60 * 60 * 1000;
   if (Date.now() - data.lastSpinTime >= H20) {
     data.spins = 2;
     data.lastSpinTime = Date.now();
     save();
   }
-  document.getElementById('spinBadge').textContent = data.spins + ' فرصت';
-  document.getElementById('spinsInfo').innerHTML = `فرصت‌های باقی‌مانده: <b>${data.spins}</b>`;
-  document.getElementById('spinBtn').disabled = data.spins <= 0;
+  document.getElementById('spinBadge').textContent = data.spins + ' spins';
+  document.getElementById('spinsInfo').innerHTML = `Spins remaining: <b>${data.spins}</b>`;
 
-  // بج‌ها
+  // Wheel only depends on onboardingDone and spins — not on daily check
+  document.getElementById('spinBtn').disabled = (data.spins <= 0) || !data.onboardingDone;
+
   const dayNow = Math.min(data.claimedDays.length + 1, 7);
-  document.getElementById('dailyBadge').textContent = 'روز ' + dayNow;
-  document.getElementById('refBadge').textContent = (data.refCount || 0) + ' نفر';
+  document.getElementById('dailyBadge').textContent = 'Day ' + dayNow;
+  document.getElementById('refBadge').textContent = (data.refCount || 0) + ' users';
 
   renderDaily();
   renderRef();
 }
 
-/* ============ گردونه ============ */
+/* ============ Wheel ============ */
 const SECTORS = [
-  { label: 'پوچ',       type: 'empty',  value: 0,  color: '#3a3a4d' },
-  { label: '۱ امتیاز',  type: 'points', value: 1,  color: '#7c5cff' },
-  { label: '۵ امتیاز',  type: 'points', value: 5,  color: '#8c6cff' },
-  { label: '۱۵ امتیاز', type: 'points', value: 15, color: '#7c5cff' },
-  { label: '۲۵ امتیاز', type: 'points', value: 25, color: '#8c6cff' },
-  { label: '۵۰ امتیاز', type: 'points', value: 50, color: '#7c5cff' },
-  { label: '۷۵ امتیاز', type: 'points', value: 75, color: '#b48cff' },
-  { label: '۱ توکن',    type: 'token',  value: 1,  color: '#6d4cd4' },
-  { label: '۵ توکن',    type: 'token',  value: 5,  color: '#b48cff' },
-  { label: '۱۰ توکن',   type: 'token',  value: 10, color: '#6d4cd4' },
-  { label: '۲۰ توکن',   type: 'token',  value: 20, color: '#b48cff' },
-  { label: '۴۰ توکن',   type: 'token',  value: 40, color: '#9d6cff' }
+  { label: 'Empty',       type: 'empty',  value: 0,  color: '#3a3a4d' },
+  { label: '1 Point',     type: 'points', value: 1,  color: '#7c5cff' },
+  { label: '5 Points',    type: 'points', value: 5,  color: '#8c6cff' },
+  { label: '15 Points',   type: 'points', value: 15, color: '#7c5cff' },
+  { label: '25 Points',   type: 'points', value: 25, color: '#8c6cff' },
+  { label: '50 Points',   type: 'points', value: 50, color: '#7c5cff' },
+  { label: '75 Points',   type: 'points', value: 75, color: '#b48cff' },
+  { label: '1 Token',     type: 'token',  value: 1,  color: '#6d4cd4' },
+  { label: '5 Tokens',    type: 'token',  value: 5,  color: '#b48cff' },
+  { label: '10 Tokens',   type: 'token',  value: 10, color: '#6d4cd4' },
+  { label: '20 Tokens',   type: 'token',  value: 20, color: '#b48cff' },
+  { label: '40 Tokens',   type: 'token',  value: 40, color: '#9d6cff' }
 ];
 
 const canvas = document.getElementById('wheel');
@@ -862,7 +974,8 @@ drawWheel();
 
 function spin() {
   if (spinning) return;
-  if (data.spins <= 0) { toast('فرصتی نداری!'); return; }
+  if (!data.onboardingDone) { toast('Please complete setup first'); return; }
+  if (data.spins <= 0) { toast('No spins left!'); return; }
   spinning = true;
   data.spins--;
   save();
@@ -884,20 +997,20 @@ function spin() {
     spinning = false;
     const s = SECTORS[targetIndex];
     if (s.type === 'empty') {
-      openResult('😢', 'پوچ!', 'این دفعه شانس یارت نبود', 'empty');
+      openResult('😢', 'Empty!', 'Better luck next time', 'empty');
     } else if (s.type === 'points') {
       data.points += s.value;
-      openResult('⭐', 'بردی!', s.value + ' امتیاز', 'p');
+      openResult('⭐', 'You won!', s.value + ' Points', 'p');
     } else {
       data.tokens += s.value;
-      openResult('🐺', 'بردی!', s.value + ' توکن Wolf', 't');
+      openResult('🐺', 'You won!', s.value + ' Wolf Tokens', 't');
     }
     save();
     render();
   }, 4600);
 }
 
-/* ============ دیلی چک ============ */
+/* ============ Daily Check ============ */
 const DAILY = [
   { day: 1, type: 'points', value: 3 },
   { day: 2, type: 'token',  value: 3 },
@@ -913,7 +1026,7 @@ function renderDaily() {
   grid.innerHTML = '';
   const t = today();
 
-  // اگه یه روز نزده، ریست
+  // Reset if a day was missed
   if (data.lastDaily && data.lastDaily !== t) {
     const last = new Date(data.lastDaily);
     const now = new Date(t);
@@ -933,31 +1046,31 @@ function renderDaily() {
     if (claimed) div.classList.add('claimed');
     if (isToday) div.classList.add('today');
     const sym = d.type === 'points' ? '⭐' : '🐺';
-    div.innerHTML = `<div class="num">روز ${d.day}</div><div class="rew">${sym} ${d.value}</div>`;
+    div.innerHTML = `<div class="num">Day ${d.day}</div><div class="rew">${sym} ${d.value}</div>`;
     grid.appendChild(div);
   });
 
   const bonus = document.createElement('div');
   bonus.className = 'day bonus';
-  bonus.innerHTML = `<div class="num">🎉 پاداش ۷ روز پیوسته</div><div class="rew">🐺 ۱۵ توکن Wolf</div>`;
+  bonus.innerHTML = `<div class="num">🎉 7-Day Streak Bonus</div><div class="rew">🐺 15 Wolf Tokens</div>`;
   grid.appendChild(bonus);
 
   const btn = document.getElementById('checkBtn');
   if (data.lastDaily === today()) {
     btn.disabled = true;
-    btn.textContent = 'امروز گرفتی ✓';
+    btn.textContent = 'Claimed today ✓';
   } else if (data.claimedDays.length >= 7) {
     btn.disabled = true;
-    btn.textContent = 'چرخه کامل شد ✓';
+    btn.textContent = 'Cycle complete ✓';
   } else {
     btn.disabled = false;
-    btn.textContent = 'دریافت جایزه امروز';
+    btn.textContent = "Claim Today's Reward";
   }
 }
 
 function dailyCheck() {
-  if (data.lastDaily === today()) { toast('امروز گرفتی!'); return; }
-  if (data.claimedDays.length >= 7) { toast('چرخه کامل شد!'); return; }
+  if (data.lastDaily === today()) { toast('Already claimed today!'); return; }
+  if (data.claimedDays.length >= 7) { toast('Cycle complete!'); return; }
 
   const day = data.claimedDays.length + 1;
   const reward = DAILY[day - 1];
@@ -966,47 +1079,45 @@ function dailyCheck() {
   data.dailyStreak++;
 
   let msg = '';
-  if (reward.type === 'points') { data.points += reward.value; msg = reward.value + ' امتیاز'; }
-  else { data.tokens += reward.value; msg = reward.value + ' توکن Wolf'; }
+  if (reward.type === 'points') { data.points += reward.value; msg = reward.value + ' Points'; }
+  else { data.tokens += reward.value; msg = reward.value + ' Wolf Tokens'; }
 
   if (data.claimedDays.length === 7) {
     data.tokens += 15;
-    msg += ' + 🎁 ۱۵ توکن پاداش!';
+    msg += ' + 🎁 15 Bonus Tokens!';
   }
 
   save();
   render();
-  openResult('🎁', 'جایزه روز ' + day, msg, reward.type === 'points' ? 'p' : 't');
+  openResult('🎁', 'Day ' + day + ' Reward', msg, reward.type === 'points' ? 'p' : 't');
 }
 
-/* ============ زیرمجموعه ============ */
+/* ============ Referral ============ */
 function renderRef() {
   const card = document.getElementById('refCard');
 
-  // اگه انتخاب نکرده → دو گزینه
   if (!data.refLocked) {
     card.innerHTML = `
-      <p>یه بار انتخاب کن که به ازای هر زیرمجموعه چی می‌خوای. <b>این انتخاب غیرقابل تغییره!</b></p>
+      <p>Choose once what you want per referral. <b>This choice cannot be changed!</b></p>
       <div class="ref-options">
         <div class="ref-opt p" onclick="chooseRef('points')">
           <div class="big">⭐ ${CONFIG.REF_POINTS}</div>
-          <div class="small">امتیاز برای هر زیرمجموعه</div>
+          <div class="small">Points per referral</div>
         </div>
         <div class="ref-opt t" onclick="chooseRef('tokens')">
           <div class="big">🐺 ${CONFIG.REF_TOKENS}</div>
-          <div class="small">توکن برای هر زیرمجموعه</div>
+          <div class="small">Tokens per referral</div>
         </div>
       </div>
     `;
     return;
   }
 
-  // بعد از انتخاب → لینک + لیست
   const refLink = `https://t.me/${CONFIG.BOT_USERNAME}?start=ref_${data.username}`;
   const choiceLabel = data.refChoice === 'points'
-    ? `${CONFIG.REF_POINTS} امتیاز`
-    : `${CONFIG.REF_TOKENS} توکن Wolf`;
-  const totalReward = data.refCount * (data.refChoice === 'points' ? CONFIG.REF_POINTS : CONFIG.REF_TOKENS);
+    ? `${CONFIG.REF_POINTS} Points`
+    : `${CONFIG.REF_TOKENS} Wolf Tokens`;
+  const totalReward = (data.refCount || 0) * (data.refChoice === 'points' ? CONFIG.REF_POINTS : CONFIG.REF_TOKENS);
 
   let listHtml = '';
   if (data.refList && data.refList.length > 0) {
@@ -1017,51 +1128,51 @@ function renderRef() {
       </div>
     `).join('');
   } else {
-    listHtml = '<div class="ref-empty">هنوز زیرمجموعه‌ای نداری</div>';
+    listHtml = '<div class="ref-empty">No referrals yet</div>';
   }
 
   card.innerHTML = `
     <div class="ref-locked">
       <div class="big">✅</div>
-      <div class="info">انتخاب شما: <b>${choiceLabel}</b> به ازای هر زیرمجموعه</div>
+      <div class="info">Your choice: <b>${choiceLabel}</b> per referral</div>
     </div>
 
     <div class="ref-link-box">
       <span id="refLinkText">${refLink}</span>
-      <button onclick="copyRefLink()">📋 کپی</button>
+      <button onclick="copyRefLink()">📋 Copy</button>
     </div>
 
     <div class="ref-stats">
       <div class="ref-stat">
         <div class="num">${data.refCount || 0}</div>
-        <div class="lbl">تعداد زیرمجموعه</div>
+        <div class="lbl">Total Referrals</div>
       </div>
       <div class="ref-stat">
         <div class="num">${totalReward}</div>
-        <div class="lbl">پاداش کل</div>
+        <div class="lbl">Total Reward</div>
       </div>
     </div>
 
-    <div style="font-size:13px;color:var(--muted);margin-bottom:8px;">📋 لیست زیرمجموعه‌ها:</div>
+    <div style="font-size:13px;color:var(--muted);margin-bottom:8px;">📋 Referral List:</div>
     <div class="ref-list">${listHtml}</div>
   `;
 }
 
 function chooseRef(type) {
-  const label = type === 'points' ? `${CONFIG.REF_POINTS} امتیاز` : `${CONFIG.REF_TOKENS} توکن Wolf`;
-  if (!confirm(`مطمئنی؟ انتخاب: ${label} به ازای هر زیرمجموعه — دیگه قابل تغییر نیست!`)) return;
+  const label = type === 'points' ? `${CONFIG.REF_POINTS} Points` : `${CONFIG.REF_TOKENS} Wolf Tokens`;
+  if (!confirm(`Are you sure? Choice: ${label} per referral — this cannot be changed!`)) return;
   data.refChoice = type;
   data.refLocked = true;
   save();
   renderRef();
   render();
-  toast('انتخاب ثبت شد ✅');
+  toast('Choice saved ✅');
 }
 
 function copyRefLink() {
   const link = `https://t.me/${CONFIG.BOT_USERNAME}?start=ref_${data.username}`;
   if (navigator.clipboard) {
-    navigator.clipboard.writeText(link).then(() => toast('لینک کپی شد ✅'));
+    navigator.clipboard.writeText(link).then(() => toast('Link copied ✅'));
   } else {
     const ta = document.createElement('textarea');
     ta.value = link;
@@ -1069,11 +1180,11 @@ function copyRefLink() {
     ta.select();
     document.execCommand('copy');
     document.body.removeChild(ta);
-    toast('لینک کپی شد ✅');
+    toast('Link copied ✅');
   }
 }
 
-/* ============ بونوس ============ */
+/* ============ Bonus ============ */
 function redeemBonus() {
   const input = document.getElementById('bonusInput');
   const status = document.getElementById('bonusStatus');
@@ -1081,31 +1192,28 @@ function redeemBonus() {
 
   if (!code) {
     status.className = 'bonus-status error';
-    status.textContent = '❌ کد رو وارد کن';
+    status.textContent = '❌ Enter a code';
     return;
   }
 
   if (code.length !== 5) {
     status.className = 'bonus-status error';
-    status.textContent = '❌ کد باید ۵ کاراکتر باشه';
+    status.textContent = '❌ Code must be 5 characters';
     return;
   }
 
-  // چک کن کاربر قبلاً این کد رو استفاده کرده
   if (data.usedBonusCodes && data.usedBonusCodes.includes(code)) {
     status.className = 'bonus-status error';
-    status.textContent = '❌ این کد رو قبلاً استفاده کردی';
+    status.textContent = '❌ You already used this code';
     return;
   }
 
-  // چک کن کد معتبره
   if (!window.BONUS_CODES || !window.BONUS_CODES.includes(code)) {
     status.className = 'bonus-status error';
-    status.textContent = '❌ کد نامعتبره';
+    status.textContent = '❌ Invalid code';
     return;
   }
 
-  // کد معتبر → جایزه بده
   data.points += 25;
   data.tokens += 10;
   if (!data.usedBonusCodes) data.usedBonusCodes = [];
@@ -1114,7 +1222,7 @@ function redeemBonus() {
   render();
 
   status.className = 'bonus-status success';
-  status.textContent = `✅ کد تأیید شد! ۲۵ امتیاز + ۱۰ توکن اضافه شد 🎉`;
+  status.textContent = `✅ Code verified! +25 Points +10 Tokens 🎉`;
   input.value = '';
   input.disabled = true;
   document.getElementById('bonusBtn').disabled = true;
@@ -1127,52 +1235,7 @@ function redeemBonus() {
   }, 3000);
 }
 
-/* ============ کانال ============ */
-function joinChannel() {
-  window.open(CONFIG.CHANNEL_LINK, '_blank');
-  data.channelJoined = true;
-  save();
-  const btn = document.getElementById('channelJoinBtn');
-  if (btn) {
-    btn.textContent = '✅ عضو شدم';
-    btn.classList.add('joined');
-    btn.onclick = null;
-  }
-  toast('عضویت در کانال ثبت شد ✅');
-}
-
-/* ============ چک کد رفرال از URL (فقط بار اول) ============ */
-(function checkRefCode() {
-  const params = new URLSearchParams(window.location.search);
-  const ref = params.get('ref') || params.get('start');
-
-  // اگه بار اوله و کد رفرال داره
-  if (ref && !data.refCodeUsed && !data.registered) {
-    data.refCodeUsed = ref.replace('ref_', '');
-    save();
-
-    // ثبت توی وب‌هوک (اگه لینک داری)
-    if (CONFIG.WEBHOOK_URL) {
-      fetch(CONFIG.WEBHOOK_URL + '/api/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          userId: data.username,
-          refCode: data.refCodeUsed,
-          timestamp: new Date().toISOString()
-        })
-      }).catch(e => console.log('Webhook error:', e));
-    }
-  }
-})();
-
-/* ============ شروع ============ */
-render();
-setTimeout(() => {
-  document.getElementById('splash').classList.add('hide');
-}, 2500);
-
-/* ============ سینک زیرمجموعه‌ها با وب‌هوک (اگه لینک داری) ============ */
+/* ============ Sync referrals with webhook ============ */
 async function syncReferrals() {
   if (!CONFIG.WEBHOOK_URL) return;
   try {
@@ -1183,14 +1246,12 @@ async function syncReferrals() {
       const localCount = data.refCount || 0;
       if (serverCount > localCount) {
         const newRefs = serverCount - localCount;
-        // پاداش به ازای هر زیرمجموعه جدید
         if (data.refChoice === 'points') {
           data.points += newRefs * CONFIG.REF_POINTS;
         } else if (data.refChoice === 'tokens') {
           data.tokens += newRefs * CONFIG.REF_TOKENS;
         }
         data.refCount = serverCount;
-        // لیست رو ذخیره کن (اگه خواستی)
         if (!data.refList) data.refList = [];
         json.referrals.forEach(id => {
           if (!data.refList.find(r => r.id === id)) {
@@ -1199,7 +1260,7 @@ async function syncReferrals() {
         });
         save();
         render();
-        toast(`🎉 ${newRefs} زیرمجموعه جدید! پاداش اضافه شد`);
+        toast(`🎉 ${newRefs} new referral(s)! Reward added`);
       }
     }
   } catch (e) {
@@ -1207,11 +1268,17 @@ async function syncReferrals() {
   }
 }
 
-// هر ۳۰ ثانیه یه بار سینک کن (اگه لینک وب‌هوک داری)
+/* ============ Init ============ */
+render();
+checkOnboarding();
+setTimeout(() => {
+  document.getElementById('splash').classList.add('hide');
+}, 2500);
+
 if (CONFIG.WEBHOOK_URL) {
   setInterval(syncReferrals, 30000);
   setTimeout(syncReferrals, 3000);
 }
 </script>
 </body>
-</html>
+                                        </html>
