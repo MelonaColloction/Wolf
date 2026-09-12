@@ -113,10 +113,11 @@ header .user .dot { width: 8px; height: 8px; border-radius: 50%; background: var
 .ref-locked .info { font-size: 15px; margin-bottom: 6px; }
 .ref-locked .info b { color: var(--accent2); }
 .ref-link-box { background: rgba(255,255,255,0.03); border: 1px solid var(--border); padding: 12px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; gap: 10px; margin: 14px 0; }
-.ref-link-box span { color: var(--muted); font-size: 12px; word-break: break-all; flex: 1; text-align: left; }
+.ref-link-box span { color: var(--muted); font-size: 12px; word-break: break-all; flex: 1; text-align: left; font-family: 'Courier New', monospace; }
 .ref-link-box button { background: var(--accent); border: none; color: white; padding: 8px 14px; border-radius: 10px; font-size: 12px; font-weight: bold; cursor: pointer; transition: 0.2s; white-space: nowrap; }
 .ref-link-box button:hover { background: var(--accent2); }
-.ref-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+.ref-label { font-size: 12px; color: var(--muted); margin-top: 10px; margin-bottom: 2px; }
+.ref-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 14px 0; }
 .ref-stat { background: var(--card2); border: 1px solid var(--border); border-radius: 12px; padding: 12px; text-align: center; }
 .ref-stat .num { font-size: 22px; font-weight: bold; color: var(--accent2); }
 .ref-stat .lbl { font-size: 11px; color: var(--muted); margin-top: 4px; }
@@ -639,10 +640,19 @@ function renderRef() {
       '<div class="big">✅</div>' +
       '<div class="info">Your choice: <b>' + choiceLabel + '</b> per referral</div>' +
     '</div>' +
+
+    '<div class="ref-label">🆔 Your Referral Code:</div>' +
+    '<div class="ref-link-box">' +
+      '<span id="refCodeText">' + data.username + '</span>' +
+      '<button onclick="copyRefCode()">📋 Copy</button>' +
+    '</div>' +
+
+    '<div class="ref-label">🔗 Your Referral Link:</div>' +
     '<div class="ref-link-box">' +
       '<span id="refLinkText">' + refLink + '</span>' +
       '<button onclick="copyRefLink()">📋 Copy</button>' +
     '</div>' +
+
     '<div class="ref-stats">' +
       '<div class="ref-stat"><div class="num">' + (data.refCount || 0) + '</div><div class="lbl">Total Referrals</div></div>' +
       '<div class="ref-stat"><div class="num">' + totalReward + '</div><div class="lbl">Total Reward</div></div>' +
@@ -659,6 +669,20 @@ function chooseRef(type) {
   renderRef();
   render();
   toast('Choice saved ✅');
+}
+function copyRefCode() {
+  const code = data.username;
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(code).then(() => toast('Code copied ✅'));
+  } else {
+    const ta = document.createElement('textarea');
+    ta.value = code;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    toast('Code copied ✅');
+  }
 }
 function copyRefLink() {
   const link = 'https://t.me/' + CONFIG.BOT_USERNAME + '?start=ref_' + data.username;
