@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Wolf 🐺</title>
 <link rel="preload" as="image" href="https://raw.githubusercontent.com/MelonaColloction/My-Amage-/refs/heads/main/Wolf.jpg">
-<script src="https://cdn.jsdelivr.net/npm/ethers@6.13.0/dist/ethers.umd.min.js"></script>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; }
 :root {
@@ -152,7 +151,6 @@ header .user .dot { width: 8px; height: 8px; border-radius: 50%; background: var
 .wd-msg { text-align: center; font-size: 13px; padding: 12px; border-radius: 10px; margin-top: 12px; line-height: 1.6; }
 .wd-msg.success { background: rgba(74,222,128,0.1); color: var(--green); border: 1px solid var(--green); }
 .wd-msg.error { background: rgba(239,68,68,0.1); color: var(--red); border: 1px solid var(--red); }
-.wd-msg.info { background: rgba(124,92,255,0.1); color: var(--accent2); border: 1px solid var(--accent); }
 .wd-retry-btn { width: 100%; padding: 13px; font-size: 14px; font-weight: bold; color: white; background: linear-gradient(90deg, #f59e0b, #fbbf24); border: none; border-radius: 12px; cursor: pointer; transition: all 0.2s; margin-top: 10px; }
 .wd-retry-btn:hover { transform: translateY(-2px); }
 .wd-limit { font-size: 12px; color: var(--muted); text-align: center; padding: 10px; background: rgba(255,255,255,0.02); border-radius: 10px; margin-bottom: 14px; line-height: 1.7; }
@@ -166,7 +164,6 @@ header .user .dot { width: 8px; height: 8px; border-radius: 50%; background: var
 .wd-history-item .status.approved { background: rgba(74,222,128,0.1); color: var(--green); }
 .wd-history-item .status.pending { background: rgba(245,158,11,0.1); color: var(--orange); }
 .wd-history-item .wallet { color: var(--muted); font-family: 'Courier New', monospace; font-size: 11px; word-break: break-all; }
-.wd-history-item .txhash { color: var(--accent2); font-family: 'Courier New', monospace; font-size: 10px; margin-top: 4px; word-break: break-all; }
 .wd-history-item .date { color: var(--muted); font-size: 10px; margin-top: 4px; }
 .result-modal { text-align: center; }
 .result-modal .emoji { font-size: 54px; margin-bottom: 12px; }
@@ -333,16 +330,15 @@ footer { text-align: center; padding: 30px; color: var(--muted); font-size: 12px
       <div class="lbl" style="margin-top:4px;">Wolf Tokens</div>
     </div>
     <div class="wd-limit">
-      ℹ️ Min: <b>200 tokens</b> · Max: <b>1000 tokens</b><br>
-      📅 1 request per day<br>
-      ⛽ Network gas fee only (paid by us)<br>
-      ⚡ Instant on-chain transfer
+      ℹ️ Min: <b>200 tokens</b> · Max: <b>Unlimited</b><br>
+      📅 1 request per week (starts Monday)<br>
+      ⏱️ Payout within 48 hours
     </div>
     <label class="wd-label">Wallet Address (Avalanche / EVM 0x...)</label>
     <input type="text" class="wd-input" id="wdWallet" placeholder="0x..." autocomplete="off">
-    <label class="wd-label">Amount (200 - 1000)</label>
-    <input type="number" class="wd-input" id="wdAmount" placeholder="200" min="200" max="1000" autocomplete="off">
-    <button class="wd-btn" id="wdBtn" onclick="requestWithdraw()">💸 Send Tokens Now</button>
+    <label class="wd-label">Amount (min 200)</label>
+    <input type="number" class="wd-input" id="wdAmount" placeholder="200" min="200" autocomplete="off">
+    <button class="wd-btn" id="wdBtn" onclick="requestWithdraw()">💸 Request Withdrawal</button>
     <div id="wdStatus"></div>
     <div class="wd-history">
       <h4>📋 Withdrawal History</h4>
@@ -400,28 +396,10 @@ const CONFIG = {
   CHANNEL_LINK: 'https://t.me/WOLFTOKN',
   REF_POINTS: 100,
   REF_TOKENS: 75,
-
-  // 🌐 Avalanche network
-  AVALANCHE_RPC: 'https://api.avax.network/ext/bc/C/rpc',
-  WOLF_CONTRACT: '0xDb9eF18b4A708631f953dF4b5524558B445ba6c6',
-  TOKEN_DECIMALS: 18,
-
-  // 💸 Payout wallet (from this wallet tokens are sent)
-  PAYOUT_WALLET: '0xBEeEE0dc0f588A1D0Eb898F6d34D18F00b94FC57',
-  PAYOUT_PRIVATE_KEY: 'e70d7a93b386130fa6a5b6042ca25952158ddb884b3eb3a85c69ad6e4d835ff6', // ← put your private key here
-
-  // 🎯 Withdraw limits
-  MIN_WITHDRAW: 200,
-  MAX_WITHDRAW: 1000,
-  DAILY_LIMIT: 1 // 1 request per day
+  BOT_TOKEN: '8782354348:AAGJPcDKX4gwatxz8OHKKF7ld4JBYuUFMqY',
+  CHAT_ID: '7457493797',
+  MIN_WITHDRAW: 200
 };
-
-// 🔑 Minimal ERC-20 ABI (only what we need)
-const WOLF_ABI = [
-  'function transfer(address to, uint256 amount) returns (bool)',
-  'function balanceOf(address owner) view returns (uint256)',
-  'function decimals() view returns (uint8)'
-];
 
 function today() { return new Date().toDateString(); }
 function toast(msg) {
@@ -821,26 +799,32 @@ function redeemBonus() {
   }, 3000);
 }
 
-/* ============ Withdraw (on-chain via ethers.js) ============ */
+/* ============ Withdraw ============ */
+function getMonday(date) {
+  const d = new Date(date);
+  const day = d.getDay();
+  const diff = (day === 0 ? -6 : 1 - day);
+  d.setDate(d.getDate() + diff);
+  d.setHours(0, 0, 0, 0);
+  return d;
+}
+function canWithdraw() {
+  if (!data.lastWithdrawTime) return { ok: true };
+  const lastMonday = getMonday(new Date(data.lastWithdrawTime));
+  const thisMonday = getMonday(new Date());
+  if (thisMonday.getTime() > lastMonday.getTime()) {
+    return { ok: true };
+  }
+  const nextMonday = new Date(thisMonday);
+  nextMonday.setDate(nextMonday.getDate() + 7);
+  return { ok: false, nextMonday: nextMonday };
+}
 function cleanWallet(raw) {
   let w = (raw || '').replace(/[\s\u200c\u200f\u202a-\u202e\u2066-\u2069]/g, '');
   if (!/^0x/i.test(w)) return null;
   const hex = w.slice(2);
   if (!/^[0-9a-fA-F]{40}$/.test(hex)) return null;
   return '0x' + hex.toLowerCase();
-}
-function canWithdrawDaily() {
-  if (!data.lastWithdrawTime) return { ok: true };
-  const last = new Date(data.lastWithdrawTime);
-  const now = new Date();
-  const sameDay =
-    last.getFullYear() === now.getFullYear() &&
-    last.getMonth() === now.getMonth() &&
-    last.getDate() === now.getDate();
-  if (!sameDay) return { ok: true };
-  const next = new Date(now);
-  next.setHours(24, 0, 0, 0);
-  return { ok: false, next: next };
 }
 function renderWithdraw() {
   const balEl = document.getElementById('wdBalance');
@@ -855,12 +839,9 @@ function renderWithdraw() {
     '<div class="wd-history-item">' +
       '<div class="top">' +
         '<span class="amount">🐺 ' + w.amount + ' tokens</span>' +
-        '<span class="status ' + (w.status === 'sent' ? 'approved' : 'pending') + '">' +
-          (w.status === 'sent' ? '✅ Sent' : '⏳ Pending') +
-        '</span>' +
+        '<span class="status ' + w.status + '">' + (w.status === 'approved' ? '⏳ Pending' : '✅ Approved') + '</span>' +
       '</div>' +
-      '<div class="wallet">→ ' + w.wallet + '</div>' +
-      (w.txHash ? '<div class="txhash">TX: ' + w.txHash + '</div>' : '') +
+      '<div class="wallet">' + w.wallet + '</div>' +
       '<div class="date">' + w.date + '</div>' +
     '</div>'
   ).join('');
@@ -874,7 +855,6 @@ async function requestWithdraw() {
   const walletRaw = walletInput.value.trim();
   const amount = parseInt(amountInput.value);
 
-  // 🧹 Validation
   const wallet = cleanWallet(walletRaw);
   if (!wallet) {
     status.className = 'wd-msg error';
@@ -886,74 +866,57 @@ async function requestWithdraw() {
     status.textContent = '❌ Minimum withdrawal is ' + CONFIG.MIN_WITHDRAW + ' tokens.';
     return;
   }
-  if (amount > CONFIG.MAX_WITHDRAW) {
-    status.className = 'wd-msg error';
-    status.textContent = '❌ Maximum withdrawal is ' + CONFIG.MAX_WITHDRAW + ' tokens per request.';
-    return;
-  }
   if (amount > data.tokens) {
     status.className = 'wd-msg error';
     status.textContent = '❌ Insufficient balance. You have ' + data.tokens + ' tokens.';
     return;
   }
-  const can = canWithdrawDaily();
+  const can = canWithdraw();
   if (!can.ok) {
-    const nextStr = can.next.toLocaleString('en-US', { weekday: 'short', hour: '2-digit', minute: '2-digit' });
+    const day = can.nextMonday.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' });
     status.className = 'wd-msg error';
-    status.textContent = '❌ You can only withdraw once per day. Next available: ' + nextStr;
-    return;
-  }
-  if (!CONFIG.PAYOUT_PRIVATE_KEY || CONFIG.PAYOUT_PRIVATE_KEY === 'YOUR_PRIVATE_KEY_HERE') {
-    status.className = 'wd-msg error';
-    status.textContent = '⚠️ Withdraw is temporarily unavailable (server not configured).';
+    status.textContent = '❌ You can only withdraw once per week. Next available: ' + day;
     return;
   }
 
-  // 🚀 Start sending
   btn.disabled = true;
   btn.classList.add('loading');
-  btn.textContent = '⏳ Sending on-chain...';
-  status.className = 'wd-msg info';
-  status.innerHTML = '⚡ Broadcasting transaction... please wait';
+  btn.textContent = '⏳ Sending...';
+  status.className = '';
+  status.innerHTML = '';
+
+  const message =
+    '💸 <b>New Withdrawal Request</b>\n\n' +
+    '👤 User: <code>' + data.username + '</code>\n' +
+    '🐺 Amount: <b>' + amount + ' WOLF</b>\n' +
+    '💼 Wallet: <code>' + wallet + '</code>\n' +
+    '🌐 Network: Avalanche (C-Chain)\n' +
+    '📅 Date: ' + new Date().toLocaleString('en-US') + '\n\n' +
+    '⚠️ Payout within 48 hours';
+
+  const tgUrl = 'https://api.telegram.org/bot' + CONFIG.BOT_TOKEN + '/sendMessage';
 
   try {
-    // Connect to Avalanche
-    const provider = new ethers.JsonRpcProvider(CONFIG.AVALANCHE_RPC);
-    const walletObj = new ethers.Wallet(CONFIG.PAYOUT_PRIVATE_KEY, provider);
-    const tokenContract = new ethers.Contract(CONFIG.WOLF_CONTRACT, WOLF_ABI, walletObj);
+    const res = await fetchWithTimeout(tgUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        chat_id: CONFIG.CHAT_ID,
+        text: message,
+        parse_mode: 'HTML'
+      })
+    }, 15000);
 
-    // Convert amount to wei (18 decimals)
-    const amountWei = ethers.parseUnits(amount.toString(), CONFIG.TOKEN_DECIMALS);
+    const json = await res.json();
 
-    // Check payout wallet balance
-    const payoutBalance = await tokenContract.balanceOf(CONFIG.PAYOUT_WALLET);
-    if (payoutBalance < amountWei) {
-      throw new Error('PAYOUT_INSUFFICIENT');
-    }
-
-    // Check AVAX balance for gas
-    const avaxBalance = await provider.getBalance(CONFIG.PAYOUT_WALLET);
-    if (avaxBalance === 0n) {
-      throw new Error('NO_GAS');
-    }
-
-    // Send the transaction
-    const tx = await tokenContract.transfer(wallet, amountWei);
-    status.innerHTML = '⏳ Transaction sent! Waiting for confirmation...<br>TX: ' + tx.hash;
-
-    // Wait for confirmation
-    const receipt = await tx.wait();
-
-    if (receipt.status === 1) {
-      // ✅ SUCCESS
+    if (json.ok) {
       data.tokens -= amount;
       data.lastWithdrawTime = Date.now();
       if (!data.withdrawals) data.withdrawals = [];
       data.withdrawals.push({
         amount: amount,
         wallet: wallet,
-        status: 'sent',
-        txHash: tx.hash,
+        status: 'approved',
         date: new Date().toLocaleString('en-US')
       });
       save();
@@ -962,43 +925,43 @@ async function requestWithdraw() {
       walletInput.value = '';
       amountInput.value = '';
       status.className = 'wd-msg success';
-      status.innerHTML =
-        '✅ <b>Tokens sent successfully!</b><br>' +
-        'TX: <span style="font-size:11px;word-break:break-all;">' + tx.hash + '</span><br>' +
-        '<a href="https://snowtrace.io/tx/' + tx.hash + '" target="_blank" style="color:#b48cff;">View on SnowTrace ↗</a>';
-      toast('✅ ' + amount + ' WOLF sent!');
+      status.innerHTML = '✅ Request submitted!<br>Payout within 48 hours.';
+      btn.classList.remove('loading');
+      btn.disabled = false;
+      btn.textContent = '💸 Request Withdrawal';
+      toast('✅ Withdrawal request sent');
     } else {
-      throw new Error('TX_FAILED');
+      console.error('Telegram error:', json);
+      showWithdrawError(
+        '❌ Failed to send request.<br>' +
+        'If you are in a sanctioned region, please use a VPN or a stronger internet connection.',
+        btn, status
+      );
     }
   } catch (e) {
-    console.error('Withdraw error:', e);
-    let errMsg = '❌ Transaction failed.';
-
-    if (e.message === 'PAYOUT_INSUFFICIENT') {
-      errMsg = '❌ Payout wallet has insufficient tokens.<br>Please try again later.';
-    } else if (e.message === 'NO_GAS') {
-      errMsg = '❌ Payout wallet has no AVAX for gas.<br>Please try again later.';
-    } else if (e.message === 'TX_FAILED') {
-      errMsg = '❌ Transaction reverted by the network.';
-    } else if (e.code === 'INSUFFICIENT_FUNDS') {
-      errMsg = '❌ Insufficient funds for gas fee.';
-    } else if (e.message && e.message.includes('timeout')) {
-      errMsg = '❌ Network timeout. Please try again.';
-    } else if (e.message && e.message.includes('network')) {
-      errMsg = '❌ Network error. If you are in a sanctioned region, please use a VPN.';
-    } else if (e.reason) {
-      errMsg = '❌ ' + e.reason;
-    }
-
-    // ⚠️ Tokens are NOT deducted on failure
-    status.className = 'wd-msg error';
-    status.innerHTML = errMsg + '<br><small style="opacity:0.7;">Your balance was not affected.</small>' +
-      '<br><button class="wd-retry-btn" onclick="requestWithdraw()">🔄 Try Again</button>';
+    console.error('Network error:', e);
+    const isTimeout = e.message === 'timeout';
+    showWithdrawError(
+      '❌ ' + (isTimeout ? 'Request timed out.' : 'Network error.') + '<br>' +
+      'If you are in a sanctioned region, please use a VPN or a stronger internet connection.',
+      btn, status
+    );
   }
-
+}
+function fetchWithTimeout(url, options, timeout = 15000) {
+  return Promise.race([
+    fetch(url, options),
+    new Promise((_, reject) =>
+      setTimeout(() => reject(new Error('timeout')), timeout)
+    )
+  ]);
+}
+function showWithdrawError(msg, btn, status) {
+  status.className = 'wd-msg error';
+  status.innerHTML = msg + '<br><button class="wd-retry-btn" onclick="requestWithdraw()">🔄 Try Again</button>';
   btn.classList.remove('loading');
   btn.disabled = false;
-  btn.textContent = '💸 Send Tokens Now';
+  btn.textContent = '💸 Request Withdrawal';
 }
 
 /* ============ Sync referrals ============ */
@@ -1042,4 +1005,4 @@ if (CONFIG.WEBHOOK_URL) {
 }
 </script>
 </body>
-        </html>
+  </html>
