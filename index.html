@@ -12,6 +12,7 @@
   --text: #e8e8f0; --muted: #8888a0;
   --accent: #7c5cff; --accent2: #b48cff;
   --gold: #ffb84d; --green: #4ade80; --red: #ef4444;
+  --orange: #f59e0b;
 }
 body {
   background: radial-gradient(circle at top, #1a1a2e 0%, #0a0a0f 70%);
@@ -138,6 +139,35 @@ header .user .dot { width: 8px; height: 8px; border-radius: 50%; background: var
 .bonus-status { text-align: center; font-size: 13px; padding: 10px; border-radius: 10px; margin-top: 10px; }
 .bonus-status.success { background: rgba(74,222,128,0.1); color: var(--green); border: 1px solid var(--green); }
 .bonus-status.error { background: rgba(239,68,68,0.1); color: var(--red); border: 1px solid var(--red); }
+/* Withdraw styles */
+.wd-label { font-size: 12px; color: var(--muted); margin-bottom: 6px; display: block; }
+.wd-input { width: 100%; padding: 13px 15px; background: var(--card2); border: 1px solid var(--border); border-radius: 12px; color: var(--text); font-size: 14px; outline: none; transition: 0.2s; margin-bottom: 14px; font-family: 'Courier New', monospace; }
+.wd-input:focus { border-color: var(--accent); }
+.wd-input::placeholder { color: var(--muted); font-family: 'Segoe UI', Tahoma, sans-serif; }
+.wd-balance { background: linear-gradient(145deg, #2a1f3a, #1a1525); border: 1px solid var(--accent); border-radius: 14px; padding: 14px; text-align: center; margin-bottom: 16px; }
+.wd-balance .lbl { font-size: 12px; color: var(--muted); }
+.wd-balance .val { font-size: 24px; font-weight: bold; color: var(--accent2); margin-top: 4px; }
+.wd-btn { width: 100%; padding: 15px; font-size: 16px; font-weight: bold; color: white; background: linear-gradient(90deg, #7c5cff, #b48cff); border: none; border-radius: 14px; cursor: pointer; transition: all 0.2s; }
+.wd-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(124,92,255,0.5); }
+.wd-btn:disabled { opacity: 0.5; cursor: not-allowed; background: #2a2a3d; }
+.wd-btn.loading { background: #6b7280; cursor: wait; }
+.wd-msg { text-align: center; font-size: 13px; padding: 12px; border-radius: 10px; margin-top: 12px; }
+.wd-msg.success { background: rgba(74,222,128,0.1); color: var(--green); border: 1px solid var(--green); }
+.wd-msg.error { background: rgba(239,68,68,0.1); color: var(--red); border: 1px solid var(--red); }
+.wd-retry-btn { width: 100%; padding: 13px; font-size: 14px; font-weight: bold; color: white; background: linear-gradient(90deg, #f59e0b, #fbbf24); border: none; border-radius: 12px; cursor: pointer; transition: all 0.2s; margin-top: 10px; }
+.wd-retry-btn:hover { transform: translateY(-2px); }
+.wd-limit { font-size: 12px; color: var(--muted); text-align: center; padding: 10px; background: rgba(255,255,255,0.02); border-radius: 10px; margin-bottom: 14px; line-height: 1.7; }
+.wd-limit b { color: var(--accent2); }
+.wd-history { margin-top: 20px; }
+.wd-history h4 { font-size: 14px; margin-bottom: 10px; color: var(--muted); }
+.wd-history-item { background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 10px; padding: 10px 14px; margin-bottom: 6px; font-size: 12px; }
+.wd-history-item .top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+.wd-history-item .amount { color: var(--accent2); font-weight: bold; }
+.wd-history-item .status { padding: 2px 8px; border-radius: 20px; font-size: 10px; }
+.wd-history-item .status.approved { background: rgba(74,222,128,0.1); color: var(--green); }
+.wd-history-item .status.pending { background: rgba(245,158,11,0.1); color: var(--orange); }
+.wd-history-item .wallet { color: var(--muted); font-family: 'Courier New', monospace; font-size: 11px; word-break: break-all; }
+.wd-history-item .date { color: var(--muted); font-size: 10px; margin-top: 4px; }
 .result-modal { text-align: center; }
 .result-modal .emoji { font-size: 54px; margin-bottom: 12px; }
 .result-modal h3 { font-size: 20px; margin-bottom: 8px; }
@@ -226,7 +256,7 @@ footer { text-align: center; padding: 30px; color: var(--muted); font-size: 12px
 <!-- ===== Main Content ===== -->
 <div id="mainContent" style="display:none;">
   <div class="section">
-    <h2>🎡 Lucky Wheel <span class="badge" id="spinBadge">2 spins</span></h2>
+    <h2>🎡 Lucky Wheel <span class="badge" id="spinBadge">3 spins</span></h2>
     <div class="wheel-wrap">
       <div class="wheel-container">
         <div class="pointer"></div>
@@ -236,7 +266,7 @@ footer { text-align: center; padding: 30px; color: var(--muted); font-size: 12px
         </div>
       </div>
       <button class="spin-btn" id="spinBtn" onclick="spin()">Spin!</button>
-      <div class="spins-info" id="spinsInfo">Spins remaining: <b>2</b></div>
+      <div class="spins-info" id="spinsInfo">Spins remaining: <b>3</b></div>
     </div>
   </div>
 
@@ -250,9 +280,13 @@ footer { text-align: center; padding: 30px; color: var(--muted); font-size: 12px
       <div class="left"><span class="icon">👥</span><span>Referral</span></div>
       <span class="badge" id="refBadge">0 users</span>
     </button>
-    <button class="modal-btn" onclick="openModal('bonus')">
+    <button class="modal-btn" onclick="openModal('bonus')" style="margin-bottom:10px;">
       <div class="left"><span class="icon">🎟️</span><span>Bonus</span></div>
       <span class="badge">Gift Code</span>
+    </button>
+    <button class="modal-btn" onclick="openModal('withdraw')">
+      <div class="left"><span class="icon">💸</span><span>Withdraw</span></div>
+      <span class="badge">WOLF</span>
     </button>
   </div>
 </div>
@@ -289,6 +323,33 @@ footer { text-align: center; padding: 30px; color: var(--muted); font-size: 12px
   </div>
 </div>
 
+<!-- ===== Withdraw Modal ===== -->
+<div class="modal-bg" id="modal-withdraw">
+  <div class="modal">
+    <div class="modal-header"><h3>💸 Withdraw WOLF</h3><button class="modal-close" onclick="closeModal('withdraw')">✕</button></div>
+    <div class="wd-balance">
+      <div class="lbl">Your Balance</div>
+      <div class="val" id="wdBalance">0</div>
+      <div class="lbl" style="margin-top:4px;">Wolf Tokens</div>
+    </div>
+    <div class="wd-limit">
+      ℹ️ Min: <b>200 tokens</b> · Max: <b>Unlimited</b><br>
+      📅 1 request per week (starts Monday)<br>
+      ⏱️ Payout within 48 hours
+    </div>
+    <label class="wd-label">Wallet Address (Avalanche / EVM 0x...)</label>
+    <input type="text" class="wd-input" id="wdWallet" placeholder="0x..." autocomplete="off">
+    <label class="wd-label">Amount (min 200)</label>
+    <input type="number" class="wd-input" id="wdAmount" placeholder="200" min="200" autocomplete="off">
+    <button class="wd-btn" id="wdBtn" onclick="requestWithdraw()">💸 Request Withdrawal</button>
+    <div id="wdStatus"></div>
+    <div class="wd-history">
+      <h4>📋 Withdrawal History</h4>
+      <div id="wdHistoryList"></div>
+    </div>
+  </div>
+</div>
+
 <!-- ===== Result Modal ===== -->
 <div class="modal-bg" id="modal-result">
   <div class="modal result-modal">
@@ -302,20 +363,24 @@ footer { text-align: center; padding: 30px; color: var(--muted); font-size: 12px
 <!-- ===== Toast ===== -->
 <div class="toast" id="toast"></div>
 
-<!-- ===== Bonus Codes (external file) ===== -->
+<!-- ===== Bonus Codes ===== -->
 <script src="codes.js"></script>
 
 <!-- ===== Main JavaScript ===== -->
 <script>
-const KEY = 'wolf_data_v1';
+const KEY = 'wolf_data_v2';
 function defaultData() {
   return {
     username: 'Wolf_' + Math.floor(1000 + Math.random() * 9000),
-    points: 0, tokens: 0, spins: 2, lastSpinTime: Date.now(),
+    points: 0, tokens: 0,
+    spins: 3,
+    lastSpinTime: Date.now(),
     dailyStreak: 0, lastDaily: null, claimedDays: [],
     refChoice: null, refCount: 0, refLocked: false, refList: [],
     usedBonusCodes: [], refCodeUsed: null,
-    channelJoined: false, onboardingDone: false
+    channelJoined: false, onboardingDone: false,
+    withdrawals: [],          // تاریخچه برداشت‌ها
+    lastWithdrawTime: 0       // زمان آخرین درخواست برداشت
   };
 }
 let data = load();
@@ -334,6 +399,10 @@ const CONFIG = {
   CHANNEL_LINK: 'https://t.me/WOLFTOKN',
   REF_POINTS: 100,
   REF_TOKENS: 75,
+  // 📩 Telegram Bot for withdrawals
+  BOT_TOKEN: '8782354348:AAGJPcDKX4gwatxz8OHKKF7ld4JBYuUFMqY',
+  CHAT_ID: '7457493797',
+  MIN_WITHDRAW: 200
 };
 
 function today() { return new Date().toDateString(); }
@@ -350,6 +419,7 @@ function openModal(name) {
   document.body.style.overflow = 'hidden';
   if (name === 'referral') renderRef();
   if (name === 'daily') renderDaily();
+  if (name === 'withdraw') renderWithdraw();
 }
 function closeModal(name) {
   document.getElementById('modal-' + name).classList.remove('show');
@@ -434,10 +504,11 @@ function render() {
   document.getElementById('tokensVal').textContent = data.tokens;
   const H20 = 20 * 60 * 60 * 1000;
   if (Date.now() - data.lastSpinTime >= H20) {
-    data.spins = 2;
+    data.spins = 3;
     data.lastSpinTime = Date.now();
     save();
   }
+  if (data.spins > 3) data.spins = 3;
   document.getElementById('spinBadge').textContent = data.spins + ' spins';
   document.getElementById('spinsInfo').innerHTML = 'Spins remaining: <b>' + data.spins + '</b>';
   document.getElementById('spinBtn').disabled = (data.spins <= 0) || !data.onboardingDone;
@@ -446,6 +517,7 @@ function render() {
   document.getElementById('refBadge').textContent = (data.refCount || 0) + ' users';
   renderDaily();
   renderRef();
+  renderWithdraw();
 }
 
 const SECTORS = [
@@ -640,19 +712,16 @@ function renderRef() {
       '<div class="big">✅</div>' +
       '<div class="info">Your choice: <b>' + choiceLabel + '</b> per referral</div>' +
     '</div>' +
-
     '<div class="ref-label">🆔 Your Referral Code:</div>' +
     '<div class="ref-link-box">' +
       '<span id="refCodeText">' + data.username + '</span>' +
       '<button onclick="copyRefCode()">📋 Copy</button>' +
     '</div>' +
-
     '<div class="ref-label">🔗 Your Referral Link:</div>' +
     '<div class="ref-link-box">' +
       '<span id="refLinkText">' + refLink + '</span>' +
       '<button onclick="copyRefLink()">📋 Copy</button>' +
     '</div>' +
-
     '<div class="ref-stats">' +
       '<div class="ref-stat"><div class="num">' + (data.refCount || 0) + '</div><div class="lbl">Total Referrals</div></div>' +
       '<div class="ref-stat"><div class="num">' + totalReward + '</div><div class="lbl">Total Reward</div></div>' +
@@ -734,6 +803,149 @@ function redeemBonus() {
   }, 3000);
 }
 
+/* ============ Withdraw ============ */
+function getMonday(date) {
+  const d = new Date(date);
+  const day = d.getDay(); // 0=Sun, 1=Mon, ...
+  const diff = (day === 0 ? -6 : 1 - day);
+  d.setDate(d.getDate() + diff);
+  d.setHours(0, 0, 0, 0);
+  return d;
+}
+function canWithdraw() {
+  if (!data.lastWithdrawTime) return { ok: true };
+  const lastMonday = getMonday(new Date(data.lastWithdrawTime));
+  const thisMonday = getMonday(new Date());
+  if (thisMonday.getTime() > lastMonday.getTime()) {
+    return { ok: true };
+  }
+  const nextMonday = new Date(thisMonday);
+  nextMonday.setDate(nextMonday.getDate() + 7);
+  return { ok: false, nextMonday: nextMonday };
+}
+function renderWithdraw() {
+  const balEl = document.getElementById('wdBalance');
+  if (balEl) balEl.textContent = data.tokens;
+  const list = document.getElementById('wdHistoryList');
+  if (!list) return;
+  if (!data.withdrawals || data.withdrawals.length === 0) {
+    list.innerHTML = '<div class="ref-empty">No withdrawals yet</div>';
+    return;
+  }
+  list.innerHTML = data.withdrawals.slice().reverse().map(w =>
+    '<div class="wd-history-item">' +
+      '<div class="top">' +
+        '<span class="amount">🐺 ' + w.amount + ' tokens</span>' +
+        '<span class="status ' + w.status + '">' + (w.status === 'approved' ? '⏳ Pending' : '✅ Approved') + '</span>' +
+      '</div>' +
+      '<div class="wallet">' + w.wallet + '</div>' +
+      '<div class="date">' + w.date + '</div>' +
+    '</div>'
+  ).join('');
+}
+async function requestWithdraw() {
+  const walletInput = document.getElementById('wdWallet');
+  const amountInput = document.getElementById('wdAmount');
+  const btn = document.getElementById('wdBtn');
+  const status = document.getElementById('wdStatus');
+
+  const wallet = walletInput.value.trim();
+  const amount = parseInt(amountInput.value);
+
+  // Validation
+  if (!wallet || !wallet.startsWith('0x') || wallet.length !== 42) {
+    status.className = 'wd-msg error';
+    status.textContent = '❌ Invalid wallet address (must be 0x + 40 chars, Avalanche/EVM)';
+    return;
+  }
+  if (!amount || amount < CONFIG.MIN_WITHDRAW) {
+    status.className = 'wd-msg error';
+    status.textContent = '❌ Minimum withdrawal is ' + CONFIG.MIN_WITHDRAW + ' tokens';
+    return;
+  }
+  if (amount > data.tokens) {
+    status.className = 'wd-msg error';
+    status.textContent = '❌ Insufficient balance. You have ' + data.tokens + ' tokens';
+    return;
+  }
+  const can = canWithdraw();
+  if (!can.ok) {
+    const day = can.nextMonday.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' });
+    status.className = 'wd-msg error';
+    status.textContent = '❌ You already requested this week. Next available: ' + day;
+    return;
+  }
+
+  // Send to Telegram
+  btn.disabled = true;
+  btn.classList.add('loading');
+  btn.textContent = '⏳ Sending...';
+  status.className = '';
+  status.textContent = '';
+
+  const message =
+    '💸 <b>New Withdrawal Request</b>\n\n' +
+    '👤 User: <code>' + data.username + '</code>\n' +
+    '🐺 Amount: <b>' + amount + ' WOLF</b>\n' +
+    '💼 Wallet: <code>' + wallet + '</code>\n' +
+    '🌐 Network: Avalanche (C-Chain)\n' +
+    '📅 Date: ' + new Date().toLocaleString('en-US') + '\n\n' +
+    '⚠️ Payout within 48 hours';
+
+  const tgUrl = 'https://api.telegram.org/bot' + CONFIG.BOT_TOKEN + '/sendMessage';
+
+  try {
+    const res = await fetch(tgUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        chat_id: CONFIG.CHAT_ID,
+        text: message,
+        parse_mode: 'HTML'
+      })
+    });
+    const json = await res.json();
+
+    if (json.ok) {
+      // ✅ Success → deduct tokens + save history
+      data.tokens -= amount;
+      data.lastWithdrawTime = Date.now();
+      if (!data.withdrawals) data.withdrawals = [];
+      data.withdrawals.push({
+        amount: amount,
+        wallet: wallet,
+        status: 'approved',
+        date: new Date().toLocaleString('en-US')
+      });
+      save();
+      render();
+      renderWithdraw();
+      walletInput.value = '';
+      amountInput.value = '';
+      status.className = 'wd-msg success';
+      status.innerHTML = '✅ Request submitted!<br>Payout within 48 hours';
+      btn.classList.remove('loading');
+      btn.disabled = false;
+      btn.textContent = '💸 Request Withdrawal';
+      toast('✅ Withdrawal request sent');
+    } else {
+      // ❌ Failed
+      throw new Error(json.description || 'Telegram error');
+    }
+  } catch (e) {
+    console.error('Withdraw error:', e);
+    btn.classList.remove('loading');
+    btn.disabled = false;
+    btn.textContent = '💸 Request Withdrawal';
+    status.className = 'wd-msg error';
+    status.innerHTML =
+      '❌ Failed to send request.<br>' +
+      'If you are in a sanctioned region, please use a VPN or a stronger internet connection.<br>' +
+      '<button class="wd-retry-btn" onclick="requestWithdraw()">🔄 Retry Request</button>';
+  }
+}
+
+/* ============ Sync referrals ============ */
 async function syncReferrals() {
   if (!CONFIG.WEBHOOK_URL) return;
   try {
@@ -764,6 +976,7 @@ async function syncReferrals() {
   } catch (e) { console.log('Sync error:', e); }
 }
 
+/* ============ Init ============ */
 render();
 checkOnboarding();
 setTimeout(() => { document.getElementById('splash').classList.add('hide'); }, 2500);
