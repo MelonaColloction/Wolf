@@ -26,11 +26,8 @@ body {
 }
 #splash.hide { opacity: 0; visibility: hidden; }
 .splash-wolf {
-  width: 240px;
-  height: auto;
-  max-height: 55vh;
-  object-fit: contain;
-  border-radius: 20px;
+  width: 240px; height: auto; max-height: 55vh;
+  object-fit: contain; border-radius: 20px;
   filter: drop-shadow(0 0 30px rgba(124, 92, 255, 0.7));
   animation: wolfPulse 2s ease-in-out infinite;
 }
@@ -139,7 +136,7 @@ header .user .dot { width: 8px; height: 8px; border-radius: 50%; background: var
 .bonus-status { text-align: center; font-size: 13px; padding: 10px; border-radius: 10px; margin-top: 10px; }
 .bonus-status.success { background: rgba(74,222,128,0.1); color: var(--green); border: 1px solid var(--green); }
 .bonus-status.error { background: rgba(239,68,68,0.1); color: var(--red); border: 1px solid var(--red); }
-/* Withdraw styles */
+/* Withdraw */
 .wd-label { font-size: 12px; color: var(--muted); margin-bottom: 6px; display: block; }
 .wd-input { width: 100%; padding: 13px 15px; background: var(--card2); border: 1px solid var(--border); border-radius: 12px; color: var(--text); font-size: 14px; outline: none; transition: 0.2s; margin-bottom: 14px; font-family: 'Courier New', monospace; }
 .wd-input:focus { border-color: var(--accent); }
@@ -151,7 +148,7 @@ header .user .dot { width: 8px; height: 8px; border-radius: 50%; background: var
 .wd-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(124,92,255,0.5); }
 .wd-btn:disabled { opacity: 0.5; cursor: not-allowed; background: #2a2a3d; }
 .wd-btn.loading { background: #6b7280; cursor: wait; }
-.wd-msg { text-align: center; font-size: 13px; padding: 12px; border-radius: 10px; margin-top: 12px; }
+.wd-msg { text-align: center; font-size: 13px; padding: 12px; border-radius: 10px; margin-top: 12px; line-height: 1.6; }
 .wd-msg.success { background: rgba(74,222,128,0.1); color: var(--green); border: 1px solid var(--green); }
 .wd-msg.error { background: rgba(239,68,68,0.1); color: var(--red); border: 1px solid var(--red); }
 .wd-retry-btn { width: 100%; padding: 13px; font-size: 14px; font-weight: bold; color: white; background: linear-gradient(90deg, #f59e0b, #fbbf24); border: none; border-radius: 12px; cursor: pointer; transition: all 0.2s; margin-top: 10px; }
@@ -379,8 +376,8 @@ function defaultData() {
     refChoice: null, refCount: 0, refLocked: false, refList: [],
     usedBonusCodes: [], refCodeUsed: null,
     channelJoined: false, onboardingDone: false,
-    withdrawals: [],          // تاریخچه برداشت‌ها
-    lastWithdrawTime: 0       // زمان آخرین درخواست برداشت
+    withdrawals: [],
+    lastWithdrawTime: 0
   };
 }
 let data = load();
@@ -399,7 +396,6 @@ const CONFIG = {
   CHANNEL_LINK: 'https://t.me/WOLFTOKN',
   REF_POINTS: 100,
   REF_TOKENS: 75,
-  // 📩 Telegram Bot for withdrawals
   BOT_TOKEN: '8782354348:AAGJPcDKX4gwatxz8OHKKF7ld4JBYuUFMqY',
   CHAT_ID: '7457493797',
   MIN_WITHDRAW: 200
@@ -806,7 +802,7 @@ function redeemBonus() {
 /* ============ Withdraw ============ */
 function getMonday(date) {
   const d = new Date(date);
-  const day = d.getDay(); // 0=Sun, 1=Mon, ...
+  const day = d.getDay();
   const diff = (day === 0 ? -6 : 1 - day);
   d.setDate(d.getDate() + diff);
   d.setHours(0, 0, 0, 0);
@@ -822,6 +818,13 @@ function canWithdraw() {
   const nextMonday = new Date(thisMonday);
   nextMonday.setDate(nextMonday.getDate() + 7);
   return { ok: false, nextMonday: nextMonday };
+}
+function cleanWallet(raw) {
+  let w = (raw || '').replace(/[\s\u200c\u200f\u202a-\u202e\u2066-\u2069]/g, '');
+  if (!/^0x/i.test(w)) return null;
+  const hex = w.slice(2);
+  if (!/^[0-9a-fA-F]{40}$/.test(hex)) return null;
+  return '0x' + hex.toLowerCase();
 }
 function renderWithdraw() {
   const balEl = document.getElementById('wdBalance');
@@ -849,39 +852,38 @@ async function requestWithdraw() {
   const btn = document.getElementById('wdBtn');
   const status = document.getElementById('wdStatus');
 
-  const wallet = walletInput.value.trim();
+  const walletRaw = walletInput.value.trim();
   const amount = parseInt(amountInput.value);
 
-  // Validation
-  if (!wallet || !wallet.startsWith('0x') || wallet.length !== 42) {
+  const wallet = cleanWallet(walletRaw);
+  if (!wallet) {
     status.className = 'wd-msg error';
-    status.textContent = '❌ Invalid wallet address (must be 0x + 40 chars, Avalanche/EVM)';
+    status.innerHTML = '❌ Invalid wallet address.<br>Must be 0x + 40 hex characters (Avalanche / EVM).';
     return;
   }
   if (!amount || amount < CONFIG.MIN_WITHDRAW) {
     status.className = 'wd-msg error';
-    status.textContent = '❌ Minimum withdrawal is ' + CONFIG.MIN_WITHDRAW + ' tokens';
+    status.textContent = '❌ Minimum withdrawal is ' + CONFIG.MIN_WITHDRAW + ' tokens.';
     return;
   }
   if (amount > data.tokens) {
     status.className = 'wd-msg error';
-    status.textContent = '❌ Insufficient balance. You have ' + data.tokens + ' tokens';
+    status.textContent = '❌ Insufficient balance. You have ' + data.tokens + ' tokens.';
     return;
   }
   const can = canWithdraw();
   if (!can.ok) {
     const day = can.nextMonday.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' });
     status.className = 'wd-msg error';
-    status.textContent = '❌ You already requested this week. Next available: ' + day;
+    status.textContent = '❌ You can only withdraw once per week. Next available: ' + day;
     return;
   }
 
-  // Send to Telegram
   btn.disabled = true;
   btn.classList.add('loading');
   btn.textContent = '⏳ Sending...';
   status.className = '';
-  status.textContent = '';
+  status.innerHTML = '';
 
   const message =
     '💸 <b>New Withdrawal Request</b>\n\n' +
@@ -895,7 +897,7 @@ async function requestWithdraw() {
   const tgUrl = 'https://api.telegram.org/bot' + CONFIG.BOT_TOKEN + '/sendMessage';
 
   try {
-    const res = await fetch(tgUrl, {
+    const res = await fetchWithTimeout(tgUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -903,11 +905,11 @@ async function requestWithdraw() {
         text: message,
         parse_mode: 'HTML'
       })
-    });
+    }, 15000);
+
     const json = await res.json();
 
     if (json.ok) {
-      // ✅ Success → deduct tokens + save history
       data.tokens -= amount;
       data.lastWithdrawTime = Date.now();
       if (!data.withdrawals) data.withdrawals = [];
@@ -923,26 +925,43 @@ async function requestWithdraw() {
       walletInput.value = '';
       amountInput.value = '';
       status.className = 'wd-msg success';
-      status.innerHTML = '✅ Request submitted!<br>Payout within 48 hours';
+      status.innerHTML = '✅ Request submitted!<br>Payout within 48 hours.';
       btn.classList.remove('loading');
       btn.disabled = false;
       btn.textContent = '💸 Request Withdrawal';
       toast('✅ Withdrawal request sent');
     } else {
-      // ❌ Failed
-      throw new Error(json.description || 'Telegram error');
+      console.error('Telegram error:', json);
+      showWithdrawError(
+        '❌ Failed to send request.<br>' +
+        'If you are in a sanctioned region, please use a VPN or a stronger internet connection.',
+        btn, status
+      );
     }
   } catch (e) {
-    console.error('Withdraw error:', e);
-    btn.classList.remove('loading');
-    btn.disabled = false;
-    btn.textContent = '💸 Request Withdrawal';
-    status.className = 'wd-msg error';
-    status.innerHTML =
-      '❌ Failed to send request.<br>' +
-      'If you are in a sanctioned region, please use a VPN or a stronger internet connection.<br>' +
-      '<button class="wd-retry-btn" onclick="requestWithdraw()">🔄 Retry Request</button>';
+    console.error('Network error:', e);
+    const isTimeout = e.message === 'timeout';
+    showWithdrawError(
+      '❌ ' + (isTimeout ? 'Request timed out.' : 'Network error.') + '<br>' +
+      'If you are in a sanctioned region, please use a VPN or a stronger internet connection.',
+      btn, status
+    );
   }
+}
+function fetchWithTimeout(url, options, timeout = 15000) {
+  return Promise.race([
+    fetch(url, options),
+    new Promise((_, reject) =>
+      setTimeout(() => reject(new Error('timeout')), timeout)
+    )
+  ]);
+}
+function showWithdrawError(msg, btn, status) {
+  status.className = 'wd-msg error';
+  status.innerHTML = msg + '<br><button class="wd-retry-btn" onclick="requestWithdraw()">🔄 Try Again</button>';
+  btn.classList.remove('loading');
+  btn.disabled = false;
+  btn.textContent = '💸 Request Withdrawal';
 }
 
 /* ============ Sync referrals ============ */
@@ -986,4 +1005,4 @@ if (CONFIG.WEBHOOK_URL) {
 }
 </script>
 </body>
-  </html>
+        </html>
