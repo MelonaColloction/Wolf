@@ -136,11 +136,11 @@ header .user .dot { width: 8px; height: 8px; border-radius: 50%; background: var
 .bonus-status { text-align: center; font-size: 13px; padding: 10px; border-radius: 10px; margin-top: 10px; }
 .bonus-status.success { background: rgba(74,222,128,0.1); color: var(--green); border: 1px solid var(--green); }
 .bonus-status.error { background: rgba(239,68,68,0.1); color: var(--red); border: 1px solid var(--red); }
-/* Withdraw */
 .wd-label { font-size: 12px; color: var(--muted); margin-bottom: 6px; display: block; }
 .wd-input { width: 100%; padding: 13px 15px; background: var(--card2); border: 1px solid var(--border); border-radius: 12px; color: var(--text); font-size: 14px; outline: none; transition: 0.2s; margin-bottom: 14px; font-family: 'Courier New', monospace; }
 .wd-input:focus { border-color: var(--accent); }
 .wd-input::placeholder { color: var(--muted); font-family: 'Segoe UI', Tahoma, sans-serif; }
+.wd-input:disabled { opacity: 0.5; cursor: not-allowed; }
 .wd-balance { background: linear-gradient(145deg, #2a1f3a, #1a1525); border: 1px solid var(--accent); border-radius: 14px; padding: 14px; text-align: center; margin-bottom: 16px; }
 .wd-balance .lbl { font-size: 12px; color: var(--muted); }
 .wd-balance .val { font-size: 24px; font-weight: bold; color: var(--accent2); margin-top: 4px; }
@@ -160,9 +160,7 @@ header .user .dot { width: 8px; height: 8px; border-radius: 50%; background: var
 .wd-history-item { background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 10px; padding: 10px 14px; margin-bottom: 6px; font-size: 12px; }
 .wd-history-item .top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
 .wd-history-item .amount { color: var(--accent2); font-weight: bold; }
-.wd-history-item .status { padding: 2px 8px; border-radius: 20px; font-size: 10px; }
-.wd-history-item .status.approved { background: rgba(74,222,128,0.1); color: var(--green); }
-.wd-history-item .status.pending { background: rgba(245,158,11,0.1); color: var(--orange); }
+.wd-history-item .status { padding: 2px 8px; border-radius: 20px; font-size: 10px; background: rgba(74,222,128,0.1); color: var(--green); }
 .wd-history-item .wallet { color: var(--muted); font-family: 'Courier New', monospace; font-size: 11px; word-break: break-all; }
 .wd-history-item .date { color: var(--muted); font-size: 10px; margin-top: 4px; }
 .result-modal { text-align: center; }
@@ -283,7 +281,7 @@ footer { text-align: center; padding: 30px; color: var(--muted); font-size: 12px
     </button>
     <button class="modal-btn" onclick="openModal('withdraw')">
       <div class="left"><span class="icon">💸</span><span>Withdraw</span></div>
-      <span class="badge">WOLF</span>
+      <span class="badge" id="wdBadge">WOLF</span>
     </button>
   </div>
 </div>
@@ -330,14 +328,14 @@ footer { text-align: center; padding: 30px; color: var(--muted); font-size: 12px
       <div class="lbl" style="margin-top:4px;">Wolf Tokens</div>
     </div>
     <div class="wd-limit">
-      ℹ️ Min: <b>200 tokens</b> · Max: <b>Unlimited</b><br>
-      📅 1 request per week (starts Monday)<br>
+      ℹ️ Minimum: <b>600 tokens</b><br>
+      📅 Only <b>1 request</b> per account (lifetime)<br>
       ⏱️ Payout within 48 hours
     </div>
     <label class="wd-label">Wallet Address (Avalanche / EVM 0x...)</label>
     <input type="text" class="wd-input" id="wdWallet" placeholder="0x..." autocomplete="off">
-    <label class="wd-label">Amount (min 200)</label>
-    <input type="number" class="wd-input" id="wdAmount" placeholder="200" min="200" autocomplete="off">
+    <label class="wd-label">Amount (min 600)</label>
+    <input type="number" class="wd-input" id="wdAmount" placeholder="600" min="600" autocomplete="off">
     <button class="wd-btn" id="wdBtn" onclick="requestWithdraw()">💸 Request Withdrawal</button>
     <div id="wdStatus"></div>
     <div class="wd-history">
@@ -377,7 +375,7 @@ function defaultData() {
     usedBonusCodes: [], refCodeUsed: null,
     channelJoined: false, onboardingDone: false,
     withdrawals: [],
-    lastWithdrawTime: 0
+    withdrawUsed: false
   };
 }
 let data = load();
@@ -398,7 +396,7 @@ const CONFIG = {
   REF_TOKENS: 75,
   BOT_TOKEN: '8782354348:AAGJPcDKX4gwatxz8OHKKF7ld4JBYuUFMqY',
   CHAT_ID: '7457493797',
-  MIN_WITHDRAW: 200
+  MIN_WITHDRAW: 600
 };
 
 function today() { return new Date().toDateString(); }
@@ -800,25 +798,6 @@ function redeemBonus() {
 }
 
 /* ============ Withdraw ============ */
-function getMonday(date) {
-  const d = new Date(date);
-  const day = d.getDay();
-  const diff = (day === 0 ? -6 : 1 - day);
-  d.setDate(d.getDate() + diff);
-  d.setHours(0, 0, 0, 0);
-  return d;
-}
-function canWithdraw() {
-  if (!data.lastWithdrawTime) return { ok: true };
-  const lastMonday = getMonday(new Date(data.lastWithdrawTime));
-  const thisMonday = getMonday(new Date());
-  if (thisMonday.getTime() > lastMonday.getTime()) {
-    return { ok: true };
-  }
-  const nextMonday = new Date(thisMonday);
-  nextMonday.setDate(nextMonday.getDate() + 7);
-  return { ok: false, nextMonday: nextMonday };
-}
 function cleanWallet(raw) {
   let w = (raw || '').replace(/[\s\u200c\u200f\u202a-\u202e\u2066-\u2069]/g, '');
   if (!/^0x/i.test(w)) return null;
@@ -829,6 +808,26 @@ function cleanWallet(raw) {
 function renderWithdraw() {
   const balEl = document.getElementById('wdBalance');
   if (balEl) balEl.textContent = data.tokens;
+
+  const walletEl = document.getElementById('wdWallet');
+  const amountEl = document.getElementById('wdAmount');
+  const btn = document.getElementById('wdBtn');
+  const limitEl = document.querySelector('#modal-withdraw .wd-limit');
+
+  // اگه قبلاً درخواست داده → قفل
+  if (data.withdrawUsed) {
+    if (walletEl) walletEl.disabled = true;
+    if (amountEl) amountEl.disabled = true;
+    if (btn) {
+      btn.disabled = true;
+      btn.textContent = '✅ Already Requested';
+      btn.classList.remove('loading');
+    }
+    if (limitEl) {
+      limitEl.innerHTML = '🔒 You have already used your <b>1 lifetime withdrawal</b>.<br>Payout within 48 hours.';
+    }
+  }
+
   const list = document.getElementById('wdHistoryList');
   if (!list) return;
   if (!data.withdrawals || data.withdrawals.length === 0) {
@@ -839,9 +838,9 @@ function renderWithdraw() {
     '<div class="wd-history-item">' +
       '<div class="top">' +
         '<span class="amount">🐺 ' + w.amount + ' tokens</span>' +
-        '<span class="status ' + w.status + '">' + (w.status === 'approved' ? '⏳ Pending' : '✅ Approved') + '</span>' +
+        '<span class="status">✅ Submitted</span>' +
       '</div>' +
-      '<div class="wallet">' + w.wallet + '</div>' +
+      '<div class="wallet">→ ' + w.wallet + '</div>' +
       '<div class="date">' + w.date + '</div>' +
     '</div>'
   ).join('');
@@ -851,6 +850,13 @@ async function requestWithdraw() {
   const amountInput = document.getElementById('wdAmount');
   const btn = document.getElementById('wdBtn');
   const status = document.getElementById('wdStatus');
+
+  // اگه قبلاً درخواست داده
+  if (data.withdrawUsed) {
+    status.className = 'wd-msg error';
+    status.textContent = '❌ You have already used your 1 lifetime withdrawal.';
+    return;
+  }
 
   const walletRaw = walletInput.value.trim();
   const amount = parseInt(amountInput.value);
@@ -869,13 +875,6 @@ async function requestWithdraw() {
   if (amount > data.tokens) {
     status.className = 'wd-msg error';
     status.textContent = '❌ Insufficient balance. You have ' + data.tokens + ' tokens.';
-    return;
-  }
-  const can = canWithdraw();
-  if (!can.ok) {
-    const day = can.nextMonday.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' });
-    status.className = 'wd-msg error';
-    status.textContent = '❌ You can only withdraw once per week. Next available: ' + day;
     return;
   }
 
@@ -910,13 +909,13 @@ async function requestWithdraw() {
     const json = await res.json();
 
     if (json.ok) {
+      // ✅ موفق → موجودی کم + قفل دائمی
       data.tokens -= amount;
-      data.lastWithdrawTime = Date.now();
+      data.withdrawUsed = true;
       if (!data.withdrawals) data.withdrawals = [];
       data.withdrawals.push({
         amount: amount,
         wallet: wallet,
-        status: 'approved',
         date: new Date().toLocaleString('en-US')
       });
       save();
@@ -927,25 +926,23 @@ async function requestWithdraw() {
       status.className = 'wd-msg success';
       status.innerHTML = '✅ Request submitted!<br>Payout within 48 hours.';
       btn.classList.remove('loading');
-      btn.disabled = false;
-      btn.textContent = '💸 Request Withdrawal';
+      btn.disabled = true;
+      btn.textContent = '✅ Already Requested';
       toast('✅ Withdrawal request sent');
     } else {
-      console.error('Telegram error:', json);
-      showWithdrawError(
-        '❌ Failed to send request.<br>' +
-        'If you are in a sanctioned region, please use a VPN or a stronger internet connection.',
-        btn, status
-      );
+      throw new Error(json.description || 'Telegram error');
     }
   } catch (e) {
-    console.error('Network error:', e);
+    console.error('Withdraw error:', e);
     const isTimeout = e.message === 'timeout';
-    showWithdrawError(
-      '❌ ' + (isTimeout ? 'Request timed out.' : 'Network error.') + '<br>' +
-      'If you are in a sanctioned region, please use a VPN or a stronger internet connection.',
-      btn, status
-    );
+    status.className = 'wd-msg error';
+    status.innerHTML =
+      '❌ ' + (isTimeout ? 'Request timed out.' : 'Failed to send request.') + '<br>' +
+      'If you are in a sanctioned region, please use a VPN or a stronger internet connection.' +
+      '<br><button class="wd-retry-btn" onclick="requestWithdraw()">🔄 Try Again</button>';
+    btn.classList.remove('loading');
+    btn.disabled = false;
+    btn.textContent = '💸 Request Withdrawal';
   }
 }
 function fetchWithTimeout(url, options, timeout = 15000) {
@@ -955,13 +952,6 @@ function fetchWithTimeout(url, options, timeout = 15000) {
       setTimeout(() => reject(new Error('timeout')), timeout)
     )
   ]);
-}
-function showWithdrawError(msg, btn, status) {
-  status.className = 'wd-msg error';
-  status.innerHTML = msg + '<br><button class="wd-retry-btn" onclick="requestWithdraw()">🔄 Try Again</button>';
-  btn.classList.remove('loading');
-  btn.disabled = false;
-  btn.textContent = '💸 Request Withdrawal';
 }
 
 /* ============ Sync referrals ============ */
